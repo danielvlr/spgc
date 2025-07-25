@@ -3,6 +3,7 @@ package br.gov.ce.arce.spgc.model.entity;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -22,30 +23,39 @@ public class Solicitacao extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE)
     private Long id;
 
+    @NotNull(message = "Necessario informar o nome da empresa.")
     private String nomeEmpresa;
 
     @CNPJ(message = "CNPJ inválido")
+    @NotNull(message = "Necessario informar o cnpj da empresa.")
     private String cnpj;
 
+    @NotNull(message = "Necessario informar o endereco da empresa.")
     private String endereco;
 
+    @NotNull(message = "Necessario informar o telefone da empresa.")
     private String telefone;
 
+    @NotNull(message = "Necessario informar o tipo da solicitação.")
     private String tipoSolicitacao;
 
     @Email
+    @NotNull(message = "Necessario informar o email da empresa.")
     private String email;
 
+    @NotNull(message = "Necessario informar o preposto da empresa.")
     private String prepostoEmpresa;
 
-    /** Token gerado para consulta da solicitação */
     private String token;
 
-    /** Número Único de Protocolo do SUITE */
     private String nupSuite;
 
+    @NotNull(message = "Necessario informar o status da solicitação.")
     private SolicitacaoStatus status;
+
+    private String justificativa;
 
     @OneToMany(mappedBy = "solicitacao", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Arquivo> arquivos;
+
 }

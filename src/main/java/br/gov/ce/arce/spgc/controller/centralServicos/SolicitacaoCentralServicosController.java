@@ -32,26 +32,17 @@ public class SolicitacaoCentralServicosController extends BaseController {
         return okResponseEntity(solicitacaoResponse, "Informe Regulação criado com sucesso");
     }
 
-    @PatchMapping("/arquivo/{id}")
-    @Operation(summary = "Atualiza arquivo rejeitado", description = "Atualiza arquivo rejeitado")
-    public ResponseEntity<BaseResponse<ArquivoResponse>> update(@Valid @RequestBody ArquivoRequest payload,
-                                                                @PathVariable Long id){
-        var solicitacaoResponse = this.arquivoService.update(id, payload);
-        return okResponseEntity(solicitacaoResponse, "Informe Regulação criado com sucesso");
-    }
-
-
-    @GetMapping
+    @GetMapping("/solicitacao")
     public BaseResponse<List<SolicitacaoResponse>> findById(@RequestParam String cnpj) {
         var result = this.solicitacaoService.findByCnpj(cnpj);
         return okSuccess(result);
     }
 
-    @GetMapping("/consulta")
-    @Operation(summary = "Consulta solicitação", description = "Consulta uma solicitação pelo número de protocolo e token")
-    public ResponseEntity<BaseResponse<SolicitacaoResponse>> consulta(@RequestParam Long id,
-                                                                     @RequestParam String token){
-        var result = this.solicitacaoService.findByIdAndToken(id, token);
-        return okResponseEntity(result);
+    @PatchMapping("/arquivo/{id}")
+    @Operation(summary = "Atualiza arquivo rejeitado", description = "Atualiza arquivo rejeitado")
+    public ResponseEntity<BaseResponse<ArquivoResponse>> update(@Valid @RequestBody ArquivoRequest payload,
+                                                                @PathVariable Long id){
+        var solicitacaoResponse = this.arquivoService.update(id, payload);
+        return okResponseEntity(solicitacaoResponse, "Atualização status arquivo realizada com sucesso");
     }
 }

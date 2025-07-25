@@ -14,5 +14,6 @@ public record SolicitacaoResponse(
         String status,
         String token,
         String nupSuite,
+        String justificativa,
         List<ArquivoResponse> arquivos
 ) {}

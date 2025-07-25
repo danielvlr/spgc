@@ -2,8 +2,8 @@ package br.gov.ce.arce.spgc.strategy;
 
 import br.gov.ce.arce.spgc.exception.BusinessException;
 import br.gov.ce.arce.spgc.model.entity.Solicitacao;
+import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.enumeration.TipoDocumento;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 
 import java.util.*;
@@ -12,11 +12,10 @@ import java.util.stream.Collectors;
 public interface SolicitacaoStrategy {
 
     void valida(Solicitacao solicitacao);
+    SolicitacaoStatus analistaFinalizaSolicitacao();
 
     enum RegraTipo {PELO_MENOS_UM, TODOS}
-
-    record Regra(String grupo, List<Integer> codigos, RegraTipo tipo, String descricao) {
-    }
+    record Regra(String grupo, List<Integer> codigos, RegraTipo tipo, String descricao) {}
 
     default void validaRegras(Solicitacao solicitacao, List<Regra> regras) {
         Set<Integer> codigosPresentes = solicitacao.getArquivos().stream()

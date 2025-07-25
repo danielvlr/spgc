@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -34,11 +35,11 @@ public class SolicitacaoService {
         // converte o request em entity
         var solicitacao = mapper.toEntity(request);
 
-        // Valida de acordo com o tipo de documento
-        strategy.valida(solicitacao);
-
         // Valida regra geral
         valida(solicitacao);
+
+        // Valida por tipo de solicitacao
+        strategy.valida(solicitacao);
 
         // Salvando solicitacao para gerar os Id na base de dados
         solicitacao = repository.save(solicitacao);
@@ -54,7 +55,6 @@ public class SolicitacaoService {
 
         // Envia email central confirmando o recebimento da solicitacao
         emailSpgcService.enviaEmailConfirmacaoCentral(solicitacao);
-
 
         return mapper.toSolicitacaoResponse(repository.save(solicitacao));
     }
@@ -84,26 +84,37 @@ public class SolicitacaoService {
         return mapper.toSolicitacaoResponseList(result);
     }
 
-    private void valida(Solicitacao solicitacao) {
+    public SolicitacaoResponse analistaFinalizaSolicitacaoRequest(Long id, AnalistaFinalizaSolicitacaoRequest payload) {
+        var solicitacao = repository.getReferenceById(id);
+        var strategy = getStrategy(solicitacao.getTipoSolicitacao());
+        var arquivos = solicitacao.getArquivos();
+
+        boolean todosValidados = arquivos.stream().allMatch(a -> a.getValido() != null);
+        boolean todosConfirmados = arquivos.stream().allMatch(a -> Boolean.TRUE.equals(a.getValido()));
+        if (!todosValidados) {
+            throw BusinessException.createBadRequestBusinessException(
+                    "Solicitação ainda tem arquivos pendentes de análise."
+            );
+        }
+
+        if (!todosConfirmados) {
+            solicitacao.setJustificativa(payload.justificativa());
+            solicitacao.setStatus(SolicitacaoStatus.DOCUMENTACAO_PENDENTE);
+            emailSpgcService.enviaEmailPendenciaDocumentoSolicitante(solicitacao);
+        } else {
+            solicitacao.setStatus(strategy.analistaFinalizaSolicitacao());
+        }
+
+        return mapper.toSolicitacaoResponse(repository.save(solicitacao));
+    }
+
+    void valida(Solicitacao solicitacao) {
         var cnpj = solicitacao.getCnpj();
         var tipoSolicitacao = solicitacao.getTipoSolicitacao();
         var solicitacaoExistente = repository.findByCnpjAndTipoSolicitacaoAndStatusNotIn(cnpj, tipoSolicitacao, SolicitacaoStatus.emAberto());
 
         if (solicitacaoExistente.isPresent()) {
             throw BusinessException.createConflictBusinessException("Já existe uma solicitação ativa para este CNPJ e tipo de solicitação.");
-        }
-    }
-
-    public void atualizaStatusSolicitacao(Solicitacao solicitacao) {
-
-        // Verifica se TODOS os arquivos da solicitação estão válidos
-        boolean todosValidos = solicitacao.getArquivos()
-                .stream()
-                .allMatch(Arquivo::getValido);
-
-        if (todosValidos) {
-            solicitacao.setStatus(SolicitacaoStatus.CONCLUIDO);
-            repository.save(solicitacao);
         }
     }
 }

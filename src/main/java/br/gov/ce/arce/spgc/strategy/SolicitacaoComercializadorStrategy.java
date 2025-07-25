@@ -4,6 +4,7 @@ package br.gov.ce.arce.spgc.strategy;
 import br.gov.ce.arce.spgc.exception.BusinessException;
 import br.gov.ce.arce.spgc.model.dto.CreateSolicitacaoRequest;
 import br.gov.ce.arce.spgc.model.entity.Solicitacao;
+import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +14,10 @@ import java.util.stream.Collectors;
 
 @Component("comercializador")
 public class SolicitacaoComercializadorStrategy implements SolicitacaoStrategy {
+
+    public SolicitacaoStatus analistaFinalizaSolicitacao(){
+        return SolicitacaoStatus.EM_ANALISE_ASSESSORIA;
+    }
 
     public void valida(Solicitacao solicitacao) {
         var regras = List.of(

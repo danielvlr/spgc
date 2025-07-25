@@ -30,7 +30,7 @@ public record CreateSolicitacaoRequest(
         @NotBlank(message = "O preposto da empresa é obrigatório")
         String prepostoEmpresa,
 
-        @NotEmpty(message = "A lista de arquivos não pode estar vazia")
         @Valid
+        @NotEmpty(message = "A lista de arquivos não pode estar vazia")
         List<CreateSolicitacaoArquivoRequest> arquivos
 ) {}

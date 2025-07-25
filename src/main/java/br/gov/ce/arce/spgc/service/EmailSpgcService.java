@@ -76,4 +76,22 @@ public class EmailSpgcService {
         String content = templateEngine.process("email-template", context);
         emailService.sendEmail(to, from, subject, content);
     }
+
+    public void enviaEmailPendenciaDocumentoSolicitante(Solicitacao solicitacao) {
+        var to = solicitacao.getEmail();
+        var from = emailProperties.getFrom();
+
+        String subject = "Solicitação recebida";
+        Map<String, Object> model = new HashMap<>();
+        model.put("numeroSolicitacao", solicitacao.getId());
+        model.put("token", solicitacao.getToken());
+        model.put("urlCentralServico", emailProperties.getUrl());
+
+        Context context = new Context();
+        context.setVariable("data", model);
+        context.setVariable("fragment", "fragments/solicitacao-pendencia-documento");
+        String content = templateEngine.process("email-template", context);
+        emailService.sendEmail(to, from, subject, content);
+    }
+
 }

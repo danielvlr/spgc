@@ -3,6 +3,7 @@ package br.gov.ce.arce.spgc.strategy;
 
 import br.gov.ce.arce.spgc.model.dto.CreateSolicitacaoRequest;
 import br.gov.ce.arce.spgc.model.entity.Solicitacao;
+import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.SolicitacaoMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ import java.util.List;
 public class SolicitacaoAutoprodutorStrategy implements SolicitacaoStrategy {
 
     private final SolicitacaoMapper mapper;
+
+    public SolicitacaoStatus analistaFinalizaSolicitacao(){
+        return SolicitacaoStatus.EM_ANALISE_ASSESSORIA;
+    }
 
     public void valida(Solicitacao solicitacao){
         var regras = List.of(

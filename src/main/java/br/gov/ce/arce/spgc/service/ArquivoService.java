@@ -3,9 +3,10 @@ package br.gov.ce.arce.spgc.service;
 import br.gov.ce.arce.spgc.client.minio.MinioService;
 import br.gov.ce.arce.spgc.model.dto.*;
 import br.gov.ce.arce.spgc.model.entity.Arquivo;
+import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.ArquivoMapper;
-import br.gov.ce.arce.spgc.repository.SolicitacaoArquivoRepository;
-import jakarta.validation.Valid;
+import br.gov.ce.arce.spgc.repository.ArquivoRepository;
+import br.gov.ce.arce.spgc.repository.SolicitacaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,39 +15,27 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ArquivoService {
 
-    private final SolicitacaoArquivoRepository repository;
+    private final ArquivoRepository repository;
     private final ArquivoMapper mapper;
     private final EmailSpgcService emailSpgcService;
-    private final SolicitacaoService solicitacaoService;
     private final MinioService minioService;
+    private final SolicitacaoRepository solicitacaoRepository;
 
 
     public ArquivoResponse findById(Long id) {
         return mapper.toArquivoResponse(repository.getReferenceById(id));
     }
 
+    @Transactional
     public ArquivoResponse validaArquivo(ValidaArquivoRequest request) {
         var arquivo = repository.getReferenceById(request.id());
 
         // Salva dados arquivo
-        salvaArquivo(request, arquivo);
-
-        // Envia email caso documento nao seja valido
-        enviaEmailSolicitante(arquivo);
-
-        return mapper.toArquivoResponse(arquivo);
-    }
-
-    private void enviaEmailSolicitante(Arquivo arquivo) {
-        if(!arquivo.getValido()){
-            emailSpgcService.enviaEmailSolicitante(arquivo);
-        }
-    }
-
-    private void salvaArquivo(ValidaArquivoRequest request, Arquivo arquivo) {
         arquivo.setValido(request.valido());
         arquivo.setJustificativa(request.justificativa());
         repository.save(arquivo);
+
+        return mapper.toArquivoResponse(arquivo);
     }
 
     public ArquivoResponse update(Long id, ArquivoRequest payload) {

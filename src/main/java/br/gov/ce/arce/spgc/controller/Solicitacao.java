@@ -2,13 +2,14 @@ package br.gov.ce.arce.spgc.controller;
 
 import br.gov.ce.arce.spgc.model.BasePageResponse;
 import br.gov.ce.arce.spgc.model.BaseResponse;
+import br.gov.ce.arce.spgc.model.dto.AnalistaFinalizaSolicitacaoRequest;
 import br.gov.ce.arce.spgc.model.dto.SolicitacaoRequest;
 import br.gov.ce.arce.spgc.model.dto.SolicitacaoResponse;
 import br.gov.ce.arce.spgc.service.SolicitacaoService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,6 @@ public class Solicitacao extends BaseController {
     private final SolicitacaoService service;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<BaseResponse<BasePageResponse<SolicitacaoResponse>>> findAll(
             @RequestParam(required = false) String nomeEmpresa,
             @RequestParam(required = false) String cnpj,
@@ -42,8 +42,15 @@ public class Solicitacao extends BaseController {
     }
 
     @GetMapping("/{id}")
-    public BaseResponse<SolicitacaoResponse> findById(@PathVariable(required = true) Long id) {
+    public BaseResponse<SolicitacaoResponse> findById(@PathVariable Long id) {
         var result = this.service.findById(id);
+        return okSuccess(result);
+    }
+
+    @PatchMapping("/analista/finaliza/{id}")
+    public BaseResponse<SolicitacaoResponse> analistaFinalizaSolicitacao(@PathVariable Long id,
+                                                                     @RequestBody @Valid AnalistaFinalizaSolicitacaoRequest payload) {
+        var result = this.service.analistaFinalizaSolicitacaoRequest(id, payload);
         return okSuccess(result);
     }
 }
