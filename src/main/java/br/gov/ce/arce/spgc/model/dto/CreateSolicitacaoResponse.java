@@ -11,5 +11,8 @@ public record CreateSolicitacaoResponse(
         String tipoSolicitacao,
         String email,
         String prepostoEmpresa,
+        String status,
+        String token,
+        String nupSuite,
         List<CreateSolicitacaoArquivoResponse> arquivos
 ) {}

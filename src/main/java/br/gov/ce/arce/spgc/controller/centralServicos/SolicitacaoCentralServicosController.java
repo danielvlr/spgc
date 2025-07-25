@@ -46,4 +46,12 @@ public class SolicitacaoCentralServicosController extends BaseController {
         var result = this.solicitacaoService.findByCnpj(cnpj);
         return okSuccess(result);
     }
+
+    @GetMapping("/consulta")
+    @Operation(summary = "Consulta solicitação", description = "Consulta uma solicitação pelo número de protocolo e token")
+    public ResponseEntity<BaseResponse<SolicitacaoResponse>> consulta(@RequestParam Long id,
+                                                                     @RequestParam String token){
+        var result = this.solicitacaoService.findByIdAndToken(id, token);
+        return okResponseEntity(result);
+    }
 }
