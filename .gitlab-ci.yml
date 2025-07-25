@@ -1,0 +1,41 @@
+before_script:
+  - mkdir -p /kaniko/.docker
+  - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  DOCKER_REGISTRY: nexus.arce.ce.gov.br:8083
+  PROJECT_VERSION: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+  DOCKER_AUTH: "YXJjZWNlYXJhOkFyY2VAMTIz"
+  DOCKER_ARCE_AUTH: "YWRtaW46YWRtaW4xMjM="
+  DOCKER_AUTH_CONFIG: '{"auths":{"https://index.docker.io/v1/":{"auth":"danielvlr"},"nexus.arce.ce.gov.br:8082":{"auth":"$DOCKER_ARCE_AUTH"},"nexus.arce.ce.gov.br:8083":{"auth":"$DOCKER_ARCE_AUTH="}}}'
+
+stages:
+  - build
+  - test
+  - coverage
+  - deploy
+
+maven_build:
+  stage: build
+  image: maven:3.9.6-eclipse-temurin-21-alpine
+  script:
+    - mvn -e -X $MAVEN_CLI_OPTS clean package -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
+
+docker_build_prod:
+  stage: deploy
+  image: maven:3.9.6-eclipse-temurin-21-alpine
+  script:
+    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+    - echo "Building Docker image for prod environment..."
+    - PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - mvn -e spring-boot:build-image -Dspring-boot.build-image.imageName="$DOCKER_REGISTRY/$CI_PROJECT_NAME:$PROJECT_VERSION" -Dspring-boot.build-image.env=prod
+    - apk add --no-cache docker
+    - docker push "$DOCKER_REGISTRY/$CI_PROJECT_NAME:$PROJECT_VERSION"
+    - docker push "$DOCKER_REGISTRY/$CI_PROJECT_NAME:latest" # Pushing with latest tag
+  only:
+    - /^release.*$/
+

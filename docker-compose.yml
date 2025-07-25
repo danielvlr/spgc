@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  server:
+    build: .
+    ports:
+      - 8080:8080
+      - 8787:8787
+      - 4000:4000
+    env_file:
+      - docker-compose.env
+    environment:
+      JAVA_OPTS: -Xms256m -Xmx512m

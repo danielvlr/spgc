@@ -1,0 +1,44 @@
+<div th:fragment="solicitacao-alteracao-indeferido-aluno">
+    <div class="content-header"
+         style="background-color: white !important; padding: 20px !important; border-bottom: solid 1px rgba(0,0,0,.1);     border-top: solid 1px rgba(0,0,0,.1);">
+        <h2 style="text-align: center; margin: 10px 0px; text-transform: uppercase; margin-bottom: 0px; margin-top: 0px; font-size: 21px;">
+            Solicitação <span th:text="${data.numeroSolicitacao}"></span> foi indeferida</h2>
+
+    </div>
+    <div style="padding: 40px;">
+        <div>
+            <table style="width: 100%; margin-bottom: 10px; background: #eee; padding: 10px; border: solid 1px #eee; margin-bottom: 0px;"><tr><td><strong>Dados da Solicitação</strong></td></tr></table>
+            <table style="width: 100%; border: solid 1px #eee; padding: 10px;">
+                <tr>
+                    <td>Número da Solicitação: </td>
+                    <td><strong th:text="${data.numeroSolicitacao}"></strong></td>
+                </tr>
+                <tr>
+                    <td>Nome: </td>
+                    <td><strong th:text="${data.empresa}"></strong></td>
+                </tr>
+                <tr>
+                    <td>Tipo documento </td>
+                    <td><strong th:text="${data.tipoDocumento}" ></strong></td>
+                </tr>
+                <tr>
+                    <td>Url </td>
+                    <td><strong th:text="${data.urlArquivo}" ></strong></td>
+                </tr>
+                <tr>
+                    <td>Status </td>
+                    <td><strong th:text="${data.status}" ></strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Motivo: </strong></td>
+                    <td><b><strong th:text="${data.justificativa}"></strong></b></td>
+                </tr>
+            </table>
+            <div style="padding: 20px; color: #757575; width: 70%; margin: auto;">
+                <a th:href="${data.urlCentralServico}"> Consultar a Solicitação
+                    <span th:text="${data.numeroSolicitacao}"></span> na Central de Serviços da ARCE </a>
+            </div>
+        </div>
+    </div>
+</div>
+
