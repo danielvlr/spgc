@@ -34,6 +34,9 @@ public class SolicitacaoService {
         // converte o request em entity
         var solicitacao = mapper.toEntity(request);
 
+        // gera token unico para consulta
+        solicitacao.setToken(java.util.UUID.randomUUID().toString());
+
         // Valida de acordo com o tipo de documento
         strategy.valida(solicitacao);
 
@@ -78,6 +81,12 @@ public class SolicitacaoService {
         return mapper.toSolicitacaoResponse(result);
     }
 
+    public SolicitacaoResponse findByIdAndToken(Long id, String token) {
+        var solicitacao = repository.findByIdAndToken(id, token)
+                .orElseThrow(() -> BusinessException.createNotFoundBusinessException("Solicitação não encontrada"));
+        return mapper.toSolicitacaoResponse(solicitacao);
+    }
+
     public List<SolicitacaoResponse> findByCnpj(String cnpj) {
         cnpj = cnpj.replaceAll("\\D", "");
         var result = repository.findByCnpj(cnpj);
@@ -87,10 +96,16 @@ public class SolicitacaoService {
     private void valida(Solicitacao solicitacao) {
         var cnpj = solicitacao.getCnpj();
         var tipoSolicitacao = solicitacao.getTipoSolicitacao();
-        var solicitacaoExistente = repository.findByCnpjAndTipoSolicitacaoAndStatus(cnpj, tipoSolicitacao, true);
+        var emAberto = java.util.List.of(
+                SolicitacaoStatus.AGUARDANDO_ANALISE,
+                SolicitacaoStatus.EM_ANALISE,
+                SolicitacaoStatus.EM_ANALISE_ASSESSORIA,
+                SolicitacaoStatus.DOCUMENTACAO_PENDENTE
+        );
+        var solicitacaoExistente = repository.findFirstByCnpjAndTipoSolicitacaoAndStatusIn(cnpj, tipoSolicitacao, emAberto);
 
         if (solicitacaoExistente.isPresent()) {
-            throw BusinessException.createConflictBusinessException("Já existe uma solicitação ativa para este CNPJ e tipo de solicitação.");
+            throw BusinessException.createConflictBusinessException("Já existe uma solicitação em aberto para este CNPJ e tipo de solicitação.");
         }
     }
 

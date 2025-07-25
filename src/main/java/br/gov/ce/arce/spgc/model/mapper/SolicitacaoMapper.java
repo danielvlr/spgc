@@ -16,6 +16,7 @@ public interface SolicitacaoMapper {
     Solicitacao toEntity(CreateSolicitacaoRequest request);
     Solicitacao toEntity(SolicitacaoRequest request);
 
+    @Mapping(target = "status", source = "status", qualifiedByName = "statusToString")
     SolicitacaoResponse toSolicitacaoResponse(Solicitacao entity);
     List<SolicitacaoResponse> toSolicitacaoResponseList(List<Solicitacao> entitys);
 
@@ -31,5 +32,10 @@ public interface SolicitacaoMapper {
                 a.setSolicitacao(solicitacao);
             }
         }
+    }
+
+    @Named("statusToString")
+    static String statusToString(br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus status){
+        return status == null ? null : status.name();
     }
 }
