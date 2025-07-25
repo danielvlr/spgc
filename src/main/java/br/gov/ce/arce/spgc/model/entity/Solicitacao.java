@@ -38,6 +38,12 @@ public class Solicitacao extends BaseEntity{
 
     private String prepostoEmpresa;
 
+    /** Token gerado para consulta da solicitação */
+    private String token;
+
+    /** Número Único de Protocolo do SUITE */
+    private String nupSuite;
+
     private SolicitacaoStatus status;
 
     @OneToMany(mappedBy = "solicitacao", cascade = CascadeType.ALL, orphanRemoval = true)
