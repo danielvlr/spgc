@@ -17,14 +17,14 @@ import java.util.List;
 import static br.gov.ce.arce.spgc.model.BaseResponse.okSuccess;
 
 @RestController
-@RequestMapping("/centralServicos/solicitacao")
+@RequestMapping("/centralServicos")
 @AllArgsConstructor
 public class SolicitacaoCentralServicosController extends BaseController {
 
     private final SolicitacaoService solicitacaoService;
     private final ArquivoService arquivoService;
 
-    @PostMapping
+    @PostMapping("/solicitacao")
     @Operation(summary = "Criar solicitação de autorização", description = "Criar solicitação de autorização para atuar no mercado livre de gás")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<BaseResponse<SolicitacaoResponse>> create(@Valid @RequestBody CreateSolicitacaoRequest payload){
@@ -32,7 +32,7 @@ public class SolicitacaoCentralServicosController extends BaseController {
         return okResponseEntity(solicitacaoResponse, "Informe Regulação criado com sucesso");
     }
 
-    @PostMapping("/arquivo/{id}")
+    @PatchMapping("/arquivo/{id}")
     @Operation(summary = "Atualiza arquivo rejeitado", description = "Atualiza arquivo rejeitado")
     public ResponseEntity<BaseResponse<ArquivoResponse>> update(@Valid @RequestBody ArquivoRequest payload,
                                                                 @PathVariable Long id){

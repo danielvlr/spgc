@@ -13,8 +13,10 @@ public interface SolicitacaoStrategy {
 
     void valida(Solicitacao solicitacao);
 
-    enum RegraTipo { PELO_MENOS_UM, TODOS }
-    record Regra(String grupo, List<Integer> codigos, RegraTipo tipo, String descricao) {}
+    enum RegraTipo {PELO_MENOS_UM, TODOS}
+
+    record Regra(String grupo, List<Integer> codigos, RegraTipo tipo, String descricao) {
+    }
 
     default void validaRegras(Solicitacao solicitacao, List<Regra> regras) {
         Set<Integer> codigosPresentes = solicitacao.getArquivos().stream()

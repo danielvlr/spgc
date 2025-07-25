@@ -1,5 +1,7 @@
 package br.gov.ce.arce.spgc.model.enumeration;
 
+import java.util.List;
+
 public enum SolicitacaoStatus {
 
     AGUARDANDO_ANALISE("Aguardando Análise"),
@@ -19,13 +21,7 @@ public enum SolicitacaoStatus {
         return descricao;
     }
 
-    /**
-     * Retorna true se o status for considerado "em aberto"
-     */
-    public boolean isEmAberto() {
-        return this == AGUARDANDO_ANALISE
-                || this == EM_ANALISE
-                || this == EM_ANALISE_ASSESSORIA
-                || this == DOCUMENTACAO_PENDENTE;
+    public static List<SolicitacaoStatus> emAberto() {
+        return List.of(AGUARDANDO_ANALISE, EM_ANALISE, EM_ANALISE_ASSESSORIA, DOCUMENTACAO_PENDENTE);
     }
 }

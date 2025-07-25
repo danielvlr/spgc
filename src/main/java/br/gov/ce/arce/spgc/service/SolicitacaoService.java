@@ -87,7 +87,7 @@ public class SolicitacaoService {
     private void valida(Solicitacao solicitacao) {
         var cnpj = solicitacao.getCnpj();
         var tipoSolicitacao = solicitacao.getTipoSolicitacao();
-        var solicitacaoExistente = repository.findByCnpjAndTipoSolicitacaoAndStatus(cnpj, tipoSolicitacao, true);
+        var solicitacaoExistente = repository.findByCnpjAndTipoSolicitacaoAndStatusNotIn(cnpj, tipoSolicitacao, SolicitacaoStatus.emAberto());
 
         if (solicitacaoExistente.isPresent()) {
             throw BusinessException.createConflictBusinessException("Já existe uma solicitação ativa para este CNPJ e tipo de solicitação.");

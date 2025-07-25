@@ -19,13 +19,11 @@ public class Arquivo extends BaseController {
     private final ArquivoService service;
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public BaseResponse<ArquivoResponse> findById(@PathVariable Long id) {
         return okSuccess(service.findById(id));
     }
 
     @PatchMapping("/valida")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<BaseResponse<ArquivoResponse>> validaArquivo(@RequestBody ValidaArquivoRequest payload) {
         return okResponseEntity(service.validaArquivo(payload));
     }

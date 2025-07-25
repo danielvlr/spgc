@@ -8,6 +8,7 @@ import br.gov.ce.arce.spgc.repository.SolicitacaoArquivoRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,16 +27,12 @@ public class ArquivoService {
 
     public ArquivoResponse validaArquivo(ValidaArquivoRequest request) {
         var arquivo = repository.getReferenceById(request.id());
-        var solicitacao = arquivo.getSolicitacao();
 
         // Salva dados arquivo
         salvaArquivo(request, arquivo);
 
         // Envia email caso documento nao seja valido
         enviaEmailSolicitante(arquivo);
-
-        // Verifica se todos os arquivos estão validados
-        solicitacaoService.atualizaStatusSolicitacao(solicitacao);
 
         return mapper.toArquivoResponse(arquivo);
     }
