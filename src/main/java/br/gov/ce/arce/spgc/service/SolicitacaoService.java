@@ -103,12 +103,12 @@ public class SolicitacaoService {
         var solicitacao = repository.getReferenceById(id);
         var strategy = getStrategy(solicitacao.getTipoSolicitacao().name());
 
-        if (!validaTodosDocumentosAvaliados(solicitacao)) {
-            throw BusinessException.createBadRequestBusinessException("Solicitação ainda tem arquivos pendentes de análise.");
+        if (!payload.valido() && payload.justificativa() != null && !payload.justificativa().isBlank()){
+            throw BusinessException.createBadRequestBusinessException("Necessario informar a justificativa para rejeição.");
         }
 
-        if (!validaTodosDocumentosConfirmados(solicitacao)) {
-            throw BusinessException.createBadRequestBusinessException("Solicitação tem arquivos não autorizados.");
+        if (!validaTodosDocumentosAvaliados(solicitacao)) {
+            throw BusinessException.createBadRequestBusinessException("Solicitação ainda tem arquivos pendentes de análise.");
         }
 
         solicitacao.setJustificativa(payload.justificativa());
@@ -129,6 +129,10 @@ public class SolicitacaoService {
 
     public SolicitacaoResponse conselhorDiretorFinalizaSolicitacaoRequest(Long id, ConselhoDiretorFinalizaSolicitacaoRequest payload) {
         var solicitacao = repository.getReferenceById(id);
+
+        if (!payload.valido() && payload.justificativa() != null && !payload.justificativa().isBlank()){
+            throw BusinessException.createBadRequestBusinessException("Necessario informar a justificativa para rejeição.");
+        }
 
         if (solicitacao.getNup() == null || solicitacao.getNup().isBlank()) {
             throw BusinessException.createBadRequestBusinessException("Solicitação não possui NUP preenchido.");
