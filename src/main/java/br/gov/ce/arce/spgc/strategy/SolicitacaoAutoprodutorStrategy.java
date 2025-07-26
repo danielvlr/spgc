@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Component("autoprodutor")
+@Component("AUTOPRODUTOR")
 @AllArgsConstructor
 public class SolicitacaoAutoprodutorStrategy implements SolicitacaoStrategy {
 

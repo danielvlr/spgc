@@ -2,7 +2,6 @@ package br.gov.ce.arce.spgc.service;
 
 import br.gov.ce.arce.spgc.client.minio.MinioService;
 import br.gov.ce.arce.spgc.model.dto.*;
-import br.gov.ce.arce.spgc.model.entity.Arquivo;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.ArquivoMapper;
 import br.gov.ce.arce.spgc.repository.ArquivoRepository;
@@ -27,7 +26,7 @@ public class ArquivoService {
     }
 
     @Transactional
-    public ArquivoResponse validaArquivo(ValidaArquivoRequest request) {
+    public ArquivoResponse analistaValidaArquivo(ValidaArquivoRequest request) {
         var arquivo = repository.getReferenceById(request.id());
 
         // Salva dados arquivo
@@ -38,10 +37,23 @@ public class ArquivoService {
         return mapper.toArquivoResponse(arquivo);
     }
 
-    public ArquivoResponse update(Long id, ArquivoRequest payload) {
+    @Transactional
+    public ArquivoResponse atualizaArquivoSolicitante(Long id, ArquivoRequest payload) {
         var arquivo = repository.getReferenceById(id);
+        var solicitacao = arquivo.getSolicitacao();
+
+        // verifica se todos os arquivos pendentes de envio foram atualizado
+        boolean todosAtualizados = solicitacao.getArquivos().stream()
+                .allMatch(a -> a.getValido() != null && solicitacao.getStatus() == SolicitacaoStatus.DOCUMENTACAO_PENDENTE);
+        if(todosAtualizados){
+            solicitacao.setStatus(SolicitacaoStatus.EM_ANALISE);
+            emailSpgcService.enviaEmailConfirmacaoCentral(solicitacao);
+        }
+
+        // atualiza dados campo de controle para null depois que o usuario subir novo arquivo
         arquivo.setJustificativa(null);
         arquivo.setValido(null);
+
         var url = minioService.saveFileBase64(payload.conteudoBase64(), "teste", arquivo.getTipoDocumento().name(),arquivo.getId());
         arquivo.setUrl(url);
         return mapper.toArquivoResponse(repository.save(arquivo));

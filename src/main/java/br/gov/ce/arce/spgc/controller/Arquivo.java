@@ -5,7 +5,6 @@ import br.gov.ce.arce.spgc.model.dto.ArquivoResponse;
 import br.gov.ce.arce.spgc.model.dto.ValidaArquivoRequest;
 import br.gov.ce.arce.spgc.service.ArquivoService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +22,8 @@ public class Arquivo extends BaseController {
         return okSuccess(service.findById(id));
     }
 
-    @PatchMapping("/valida")
-    public ResponseEntity<BaseResponse<ArquivoResponse>> validaArquivo(@RequestBody ValidaArquivoRequest payload) {
-        return okResponseEntity(service.validaArquivo(payload));
+    @PatchMapping("/analista-valida-arquivo")
+    public ResponseEntity<BaseResponse<ArquivoResponse>> analistaValidaArquivo(@RequestBody ValidaArquivoRequest payload) {
+        return okResponseEntity(service.analistaValidaArquivo(payload));
     }
 }

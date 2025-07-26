@@ -1,0 +1,8 @@
+<div th:fragment="solicitacao-confirmacao">
+    <div style="padding: 40px;">
+        <p>Recebemos sua solicitação de autorização.</p>
+        <p>Número do protocolo: <strong th:text="${data.numeroSolicitacao}"></strong></p>
+        <p>Token de acesso: <strong th:text="${data.token}"></strong></p>
+        <p>Para acompanhar o processo acesse: <a th:href="${data.urlCentralServico}">Central de Serviços</a></p>
+    </div>
+</div>

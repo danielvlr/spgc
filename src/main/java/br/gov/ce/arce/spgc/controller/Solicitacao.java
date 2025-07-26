@@ -2,9 +2,7 @@ package br.gov.ce.arce.spgc.controller;
 
 import br.gov.ce.arce.spgc.model.BasePageResponse;
 import br.gov.ce.arce.spgc.model.BaseResponse;
-import br.gov.ce.arce.spgc.model.dto.AnalistaFinalizaSolicitacaoRequest;
-import br.gov.ce.arce.spgc.model.dto.SolicitacaoRequest;
-import br.gov.ce.arce.spgc.model.dto.SolicitacaoResponse;
+import br.gov.ce.arce.spgc.model.dto.*;
 import br.gov.ce.arce.spgc.service.SolicitacaoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -12,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static br.gov.ce.arce.spgc.model.BaseResponse.okSuccess;
 
@@ -49,8 +49,24 @@ public class Solicitacao extends BaseController {
 
     @PatchMapping("/analista/finaliza/{id}")
     public BaseResponse<SolicitacaoResponse> analistaFinalizaSolicitacao(@PathVariable Long id,
-                                                                     @RequestBody @Valid AnalistaFinalizaSolicitacaoRequest payload) {
+                                                                         @RequestBody @Valid AnalistaFinalizaSolicitacaoRequest payload) {
         var result = this.service.analistaFinalizaSolicitacaoRequest(id, payload);
         return okSuccess(result);
     }
+
+    @PatchMapping("/conselho-diretor/finaliza/{id}")
+    public BaseResponse<SolicitacaoResponse> conselhoDiretorFinalizaSolicitacao(@PathVariable Long id,
+                                                                                @RequestBody @Valid ConselhoDiretorFinalizaSolicitacaoRequest payload) {
+        var result = this.service.conselhorDiretorFinalizaSolicitacaoRequest(id, payload);
+        return okSuccess(result);
+    }
+
+    @GetMapping("/dashboard")
+    public BaseResponse<List<DashboardResponse>> dashboard() {
+        var result = this.service.dashboard();
+        return okSuccess(result);
+    }
+
+
+
 }

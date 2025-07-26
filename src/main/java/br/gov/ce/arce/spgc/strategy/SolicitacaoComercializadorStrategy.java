@@ -12,11 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component("comercializador")
+@Component("COMERCIALIZADOR")
 public class SolicitacaoComercializadorStrategy implements SolicitacaoStrategy {
 
     public SolicitacaoStatus analistaFinalizaSolicitacao(){
-        return SolicitacaoStatus.EM_ANALISE_ASSESSORIA;
+        return SolicitacaoStatus.CONCLUIDO;
     }
 
     public void valida(Solicitacao solicitacao) {

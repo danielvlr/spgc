@@ -9,11 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Component("consumidorLivre")
+@Component("CONSUMIDOR_LIVRE")
 public class SolicitacaoConsumidorLivreStrategy implements SolicitacaoStrategy {
 
     public SolicitacaoStatus analistaFinalizaSolicitacao(){
-        return SolicitacaoStatus.AUTORIZADO;
+        return SolicitacaoStatus.CONCLUIDO;
     }
 
     public void valida(Solicitacao solicitacao) {

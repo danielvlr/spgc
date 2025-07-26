@@ -1,6 +1,7 @@
 package br.gov.ce.arce.spgc.model.entity;
 
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
+import br.gov.ce.arce.spgc.model.enumeration.TipoSolicitacao;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -36,8 +37,9 @@ public class Solicitacao extends BaseEntity{
     @NotNull(message = "Necessario informar o telefone da empresa.")
     private String telefone;
 
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Necessario informar o tipo da solicitação.")
-    private String tipoSolicitacao;
+    private TipoSolicitacao tipoSolicitacao;
 
     @Email
     @NotNull(message = "Necessario informar o email da empresa.")
@@ -48,7 +50,7 @@ public class Solicitacao extends BaseEntity{
 
     private String token;
 
-    private String nupSuite;
+    private String nup;
 
     @NotNull(message = "Necessario informar o status da solicitação.")
     private SolicitacaoStatus status;
@@ -56,6 +58,7 @@ public class Solicitacao extends BaseEntity{
     private String justificativa;
 
     @OneToMany(mappedBy = "solicitacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
     List<Arquivo> arquivos;
 
 }

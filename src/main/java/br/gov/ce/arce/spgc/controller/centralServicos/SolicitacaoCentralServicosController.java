@@ -17,7 +17,7 @@ import java.util.List;
 import static br.gov.ce.arce.spgc.model.BaseResponse.okSuccess;
 
 @RestController
-@RequestMapping("/centralServicos")
+@RequestMapping("/central-servicos")
 @AllArgsConstructor
 public class SolicitacaoCentralServicosController extends BaseController {
 
@@ -26,23 +26,22 @@ public class SolicitacaoCentralServicosController extends BaseController {
 
     @PostMapping("/solicitacao")
     @Operation(summary = "Criar solicitação de autorização", description = "Criar solicitação de autorização para atuar no mercado livre de gás")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<BaseResponse<SolicitacaoResponse>> create(@Valid @RequestBody CreateSolicitacaoRequest payload){
-        var solicitacaoResponse = this.solicitacaoService.create(payload);
+    public ResponseEntity<BaseResponse<SolicitacaoResponse>> criarSolicitacao(@Valid @RequestBody CreateSolicitacaoRequest payload){
+        var solicitacaoResponse = this.solicitacaoService.criarSolicitacao(payload);
         return okResponseEntity(solicitacaoResponse, "Informe Regulação criado com sucesso");
     }
 
     @GetMapping("/solicitacao")
-    public BaseResponse<List<SolicitacaoResponse>> findById(@RequestParam String cnpj) {
+    public BaseResponse<List<SolicitacaoResponse>> findByCnpj(@RequestParam String cnpj) {
         var result = this.solicitacaoService.findByCnpj(cnpj);
         return okSuccess(result);
     }
 
     @PatchMapping("/arquivo/{id}")
     @Operation(summary = "Atualiza arquivo rejeitado", description = "Atualiza arquivo rejeitado")
-    public ResponseEntity<BaseResponse<ArquivoResponse>> update(@Valid @RequestBody ArquivoRequest payload,
+    public ResponseEntity<BaseResponse<ArquivoResponse>> atualizaArquivoSolicitante(@Valid @RequestBody ArquivoRequest payload,
                                                                 @PathVariable Long id){
-        var solicitacaoResponse = this.arquivoService.update(id, payload);
+        var solicitacaoResponse = this.arquivoService.atualizaArquivoSolicitante(id, payload);
         return okResponseEntity(solicitacaoResponse, "Atualização status arquivo realizada com sucesso");
     }
 }
