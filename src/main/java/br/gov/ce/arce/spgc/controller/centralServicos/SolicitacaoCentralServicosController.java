@@ -42,6 +42,6 @@ public class SolicitacaoCentralServicosController extends BaseController {
     public ResponseEntity<BaseResponse<ArquivoResponse>> atualizaArquivoSolicitante(@Valid @RequestBody ArquivoRequest payload,
                                                                 @PathVariable Long id){
         var solicitacaoResponse = this.arquivoService.atualizaArquivoSolicitante(id, payload);
-        return okResponseEntity(solicitacaoResponse, "Atualização status arquivo realizada com sucesso");
+        return okResponseEntity(solicitacaoResponse, "Atualização do arquivo realizada com sucesso");
     }
 }

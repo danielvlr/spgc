@@ -1,6 +1,7 @@
 package br.gov.ce.arce.spgc.service;
 
 import br.gov.ce.arce.spgc.client.minio.MinioService;
+import br.gov.ce.arce.spgc.exception.BusinessException;
 import br.gov.ce.arce.spgc.model.dto.*;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.ArquivoMapper;
@@ -42,17 +43,23 @@ public class ArquivoService {
         var arquivo = repository.getReferenceById(id);
         var solicitacao = arquivo.getSolicitacao();
 
-        // verifica se todos os arquivos pendentes de envio foram atualizado
-        boolean todosAtualizados = solicitacao.getArquivos().stream()
-                .allMatch(a -> a.getValido() != null && solicitacao.getStatus() == SolicitacaoStatus.DOCUMENTACAO_PENDENTE);
-        if(todosAtualizados){
-            solicitacao.setStatus(SolicitacaoStatus.EM_ANALISE);
-            emailSpgcService.enviaEmailConfirmacaoCentral(solicitacao);
+        // Verifica se o arquivo ja e valido
+        if(arquivo.getValido() != null && arquivo.getValido()){
+            throw BusinessException.createConflictBusinessException("Arquivo ja esta com status valido.");
         }
 
         // atualiza dados campo de controle para null depois que o usuario subir novo arquivo
         arquivo.setJustificativa(null);
         arquivo.setValido(null);
+
+        // verifica se todos os arquivos pendentes de envio foram atualizado
+        boolean todosAtualizados = solicitacao.getArquivos().stream()
+                .allMatch(a -> (a.getValido() == null || a.getValido()) && solicitacao.getStatus() == SolicitacaoStatus.DOCUMENTACAO_PENDENTE);
+
+        if(todosAtualizados){
+            solicitacao.setStatus(SolicitacaoStatus.EM_ANALISE);
+            emailSpgcService.enviaEmailConfirmacaoCentral(solicitacao);
+        }
 
         var url = minioService.saveFileBase64(payload.conteudoBase64(), "teste", arquivo.getTipoDocumento().name(),arquivo.getId());
         arquivo.setUrl(url);
