@@ -14,7 +14,7 @@
 					"name": "Central Servicos",
 					"item": [
 						{
-							"name": "Criar solicitação de autorização",
+							"name": "criar solicitacao",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -52,7 +52,7 @@
 							"response": []
 						},
 						{
-							"name": "arquivo/atualizar",
+							"name": "atualiza arquivo solucitacao",
 							"request": {
 								"method": "PATCH",
 								"header": [
@@ -91,7 +91,7 @@
 							"response": []
 						},
 						{
-							"name": "find By Cnpj",
+							"name": "solicitacao/findByCnpj",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -125,7 +125,37 @@
 					"name": "Interno",
 					"item": [
 						{
-							"name": "solicitacao/find All",
+							"name": "solicitacao/findById",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/solicitacao/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"solicitacao",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6275",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "solicitacao/dashboard",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -190,271 +220,7 @@
 									]
 								}
 							},
-							"response": [
-								{
-									"name": "OK",
-									"originalRequest": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "*/*"
-											}
-										],
-										"url": {
-											"raw": "{{baseUrl}}/solicitacao?nomeEmpresa=string&cnpj=string&endereco=string&telefone=string&tipoSolicitacao=string&email=string&prepostoEmpresa=string&page=0&size=10&sortBy=id&sortOrder=ASC",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"solicitacao"
-											],
-											"query": [
-												{
-													"key": "nomeEmpresa",
-													"value": "string"
-												},
-												{
-													"key": "cnpj",
-													"value": "string"
-												},
-												{
-													"key": "endereco",
-													"value": "string"
-												},
-												{
-													"key": "telefone",
-													"value": "string"
-												},
-												{
-													"key": "tipoSolicitacao",
-													"value": "string"
-												},
-												{
-													"key": "email",
-													"value": "string"
-												},
-												{
-													"key": "prepostoEmpresa",
-													"value": "string"
-												},
-												{
-													"key": "page",
-													"value": "0"
-												},
-												{
-													"key": "size",
-													"value": "10"
-												},
-												{
-													"key": "sortBy",
-													"value": "id"
-												},
-												{
-													"key": "sortOrder",
-													"value": "ASC"
-												}
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "text",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "*/*"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"statusCode\": 2371,\n  \"message\": \"string\",\n  \"messageType\": \"WARNING\",\n  \"result\": {\n    \"totalElements\": 4838,\n    \"totalElementsThisPage\": 2007,\n    \"pageNumber\": 186,\n    \"pageIndex\": 1277,\n    \"totalPages\": 9026,\n    \"isFirst\": true,\n    \"isLast\": true,\n    \"hasNext\": true,\n    \"hasPrevious\": true,\n    \"data\": [\n      {\n        \"id\": 7097,\n        \"nomeEmpresa\": \"string\",\n        \"cnpj\": \"string\",\n        \"endereco\": \"string\",\n        \"telefone\": \"string\",\n        \"tipoSolicitacao\": \"string\",\n        \"email\": \"string\",\n        \"prepostoEmpresa\": \"string\",\n        \"arquivos\": [\n          {\n            \"id\": 2126,\n            \"tipoDocumento\": \"st\",\n            \"url\": \"string\",\n            \"valido\": false,\n            \"justificativa\": \"string\"\n          },\n          {\n            \"id\": 2161,\n            \"tipoDocumento\": \"string\",\n            \"url\": \"string\",\n            \"valido\": false,\n            \"justificativa\": \"string\"\n          }\n        ]\n      },\n      {\n        \"id\": 5331,\n        \"nomeEmpresa\": \"string\",\n        \"cnpj\": \"string\",\n        \"endereco\": \"string\",\n        \"telefone\": \"string\",\n        \"tipoSolicitacao\": \"string\",\n        \"email\": \"string\",\n        \"prepostoEmpresa\": \"string\",\n        \"arquivos\": [\n          {\n            \"id\": 9560,\n            \"tipoDocumento\": \"string\",\n            \"url\": \"string\",\n            \"valido\": true,\n            \"justificativa\": \"string\"\n          },\n          {\n            \"id\": 1075,\n            \"tipoDocumento\": \"string\",\n            \"url\": \"string\",\n            \"valido\": true,\n            \"justificativa\": \"string\"\n          }\n        ]\n      }\n    ]\n  }\n}"
-								},
-								{
-									"name": "Bad Request",
-									"originalRequest": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "*/*"
-											}
-										],
-										"url": {
-											"raw": "{{baseUrl}}/solicitacao?nomeEmpresa=string&cnpj=string&endereco=string&telefone=string&tipoSolicitacao=string&email=string&prepostoEmpresa=string&page=0&size=10&sortBy=id&sortOrder=ASC",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"solicitacao"
-											],
-											"query": [
-												{
-													"key": "nomeEmpresa",
-													"value": "string"
-												},
-												{
-													"key": "cnpj",
-													"value": "string"
-												},
-												{
-													"key": "endereco",
-													"value": "string"
-												},
-												{
-													"key": "telefone",
-													"value": "string"
-												},
-												{
-													"key": "tipoSolicitacao",
-													"value": "string"
-												},
-												{
-													"key": "email",
-													"value": "string"
-												},
-												{
-													"key": "prepostoEmpresa",
-													"value": "string"
-												},
-												{
-													"key": "page",
-													"value": "0"
-												},
-												{
-													"key": "size",
-													"value": "10"
-												},
-												{
-													"key": "sortBy",
-													"value": "id"
-												},
-												{
-													"key": "sortOrder",
-													"value": "ASC"
-												}
-											]
-										}
-									},
-									"status": "Bad Request",
-									"code": 400,
-									"_postman_previewlanguage": "text",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "*/*"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"statusCode\": 8687,\n  \"message\": \"string\",\n  \"messageType\": \"ERROR\",\n  \"result\": {}\n}"
-								}
-							]
-						},
-						{
-							"name": "solicitacao/findById",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"url": {
-									"raw": "{{baseUrl}}/solicitacao/:id",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"solicitacao",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "6275",
-											"description": "(Required) "
-										}
-									]
-								}
-							},
-							"response": [
-								{
-									"name": "OK",
-									"originalRequest": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "*/*"
-											}
-										],
-										"url": {
-											"raw": "{{baseUrl}}/solicitacao/:id",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"solicitacao",
-												":id"
-											],
-											"variable": [
-												{
-													"key": "id"
-												}
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "text",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "*/*"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"statusCode\": 855,\n  \"message\": \"string\",\n  \"messageType\": \"SUCCESS\",\n  \"result\": {\n    \"id\": 1243,\n    \"nomeEmpresa\": \"string\",\n    \"cnpj\": \"string\",\n    \"endereco\": \"string\",\n    \"telefone\": \"string\",\n    \"tipoSolicitacao\": \"string\",\n    \"email\": \"string\",\n    \"prepostoEmpresa\": \"string\",\n    \"arquivos\": [\n      {\n        \"id\": 3956,\n        \"tipoDocumento\": \"string\",\n        \"url\": \"string\",\n        \"valido\": true,\n        \"justificativa\": \"string\"\n      },\n      {\n        \"id\": 5659,\n        \"tipoDocumento\": \"string\",\n        \"url\": \"string\",\n        \"valido\": true,\n        \"justificativa\": \"string\"\n      }\n    ]\n  }\n}"
-								},
-								{
-									"name": "Bad Request",
-									"originalRequest": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "*/*"
-											}
-										],
-										"url": {
-											"raw": "{{baseUrl}}/solicitacao/:id",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"solicitacao",
-												":id"
-											],
-											"variable": [
-												{
-													"key": "id"
-												}
-											]
-										}
-									},
-									"status": "Bad Request",
-									"code": 400,
-									"_postman_previewlanguage": "text",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "*/*"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"statusCode\": 8687,\n  \"message\": \"string\",\n  \"messageType\": \"ERROR\",\n  \"result\": {}\n}"
-								}
-							]
+							"response": []
 						},
 						{
 							"name": "valida Arquivo",
@@ -472,7 +238,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"id\": 7528,\n  \"valido\": false,\n  \"justificativa\": \"string\"\n}",
+									"raw": "{\n  \"id\": 1,\n  \"valido\": true\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -481,112 +247,95 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/arquivo/valida",
+									"raw": "{{baseUrl}}/arquivo/analista-valida-arquivo",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"arquivo",
-										"valida"
+										"analista-valida-arquivo"
 									]
 								}
 							},
-							"response": [
-								{
-									"name": "OK",
-									"originalRequest": {
-										"method": "PATCH",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
-											{
-												"key": "Accept",
-												"value": "*/*"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n  \"id\": 7528,\n  \"valido\": false,\n  \"justificativa\": \"string\"\n}",
-											"options": {
-												"raw": {
-													"headerFamily": "json",
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{baseUrl}}/arquivo/valida",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"arquivo",
-												"valida"
-											]
-										}
+							"response": []
+						},
+						{
+							"name": "analista finaliza solicitacao",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
 									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "text",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "*/*"
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"justificativa\": \"ta tudo errado\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
 										}
-									],
-									"cookie": [],
-									"body": "{\n  \"statusCode\": 8268,\n  \"message\": \"string\",\n  \"messageType\": \"SUCCESS\",\n  \"result\": {\n    \"id\": 2789,\n    \"tipoDocumento\": \"string\",\n    \"url\": \"string\",\n    \"valido\": false,\n    \"justificativa\": \"string\"\n  }\n}"
+									}
 								},
-								{
-									"name": "Bad Request",
-									"originalRequest": {
-										"method": "PATCH",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
-											{
-												"key": "Accept",
-												"value": "*/*"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n  \"id\": 7528,\n  \"valido\": false,\n  \"justificativa\": \"string\"\n}",
-											"options": {
-												"raw": {
-													"headerFamily": "json",
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{baseUrl}}/arquivo/valida",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"arquivo",
-												"valida"
-											]
-										}
-									},
-									"status": "Bad Request",
-									"code": 400,
-									"_postman_previewlanguage": "text",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "*/*"
-										}
+								"url": {
+									"raw": "{{baseUrl}}/solicitacao/analista/finaliza/1",
+									"host": [
+										"{{baseUrl}}"
 									],
-									"cookie": [],
-									"body": "{\n  \"statusCode\": 8687,\n  \"message\": \"string\",\n  \"messageType\": \"ERROR\",\n  \"result\": {}\n}"
+									"path": [
+										"solicitacao",
+										"analista",
+										"finaliza",
+										"1"
+									]
 								}
-							]
+							},
+							"response": []
+						},
+						{
+							"name": "conselho diretor finaliza solicitacao",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"justificativa\": \"ta tudo errado\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/solicitacao/analista/finaliza/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"solicitacao",
+										"analista",
+										"finaliza",
+										"1"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
