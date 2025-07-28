@@ -29,7 +29,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"arquivos\": [\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"ATO_CONSTITUTIVO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CARTAO_CNPJ\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_FEDERAL\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_ESTADUAL\"\n        },\n                {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_MUNICIPAL\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"REGISTRO_AUTOIMPORTADOR_ANP\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"ACORDO_TECNICO_NOVA_CANALIZACAO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"GARANTIA_VOLUME_GAS_RECEPCAO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"REQUERIMENTO_MERCADO_LIVRE_GAS\"\n        }\n    ],\n    \"cnpj\": \"21.272.190/0001-76\",\n    \"email\": \"danielvlr@gmail.com\",\n    \"endereco\": \"Rua gomes barreto n: 20\",\n    \"nomeEmpresa\": \"Empresa teste 01\",\n    \"prepostoEmpresa\": \"Preposto empresa\",\n    \"telefone\": \"859997129572\",\n    \"tipoSolicitacao\": \"autoprodutor\"\n}",
+									"raw": "{\n    \"arquivos\": [\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"ATO_CONSTITUTIVO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CARTAO_CNPJ\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_FEDERAL\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_ESTADUAL\"\n        },\n                {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_MUNICIPAL\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"REGISTRO_AUTOIMPORTADOR_ANP\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"ACORDO_TECNICO_NOVA_CANALIZACAO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"GARANTIA_VOLUME_GAS_RECEPCAO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"REQUERIMENTO_MERCADO_LIVRE_GAS\"\n        }\n    ],\n    \"cnpj\": \"21.272.190/0001-76\",\n    \"email\": \"danielvlr@gmail.com\",\n    \"endereco\": \"Rua gomes barreto n: 20\",\n    \"nomeEmpresa\": \"Empresa teste 01\",\n    \"prepostoEmpresa\": \"Preposto empresa\",\n    \"telefone\": \"859997129572\",\n    \"tipoSolicitacao\": \"AUTOPRODUTOR\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -38,12 +38,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/centralServicos/solicitacao",
+									"raw": "{{baseUrl}}/central-servicos/solicitacao",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"centralServicos",
+										"central-servicos",
 										"solicitacao"
 									]
 								},
@@ -76,12 +76,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/centralServicos/arquivo/1",
+									"raw": "{{baseUrl}}/central-servicos/arquivo/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"centralServicos",
+										"central-servicos",
 										"arquivo",
 										"1"
 									]
@@ -101,12 +101,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/centralServicos/solicitacao?cnpj=21.272.190/0001-76",
+									"raw": "{{baseUrl}}/central-servicos/solicitacao?cnpj=21.272.190/0001-76",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"centralServicos",
+										"central-servicos",
 										"solicitacao"
 									],
 									"query": [
@@ -124,6 +124,104 @@
 				{
 					"name": "Interno",
 					"item": [
+						{
+							"name": "Justificativa",
+							"item": [
+								{
+									"name": "findAll",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"arquivos\": [\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"ATO_CONSTITUTIVO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CARTAO_CNPJ\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_FEDERAL\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_ESTADUAL\"\n        },\n                {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"CND_FAZENDA_MUNICIPAL\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"REGISTRO_AUTOIMPORTADOR_ANP\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"ACORDO_TECNICO_NOVA_CANALIZACAO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"GARANTIA_VOLUME_GAS_RECEPCAO\"\n        },\n        {\n            \"conteudoBase64\": \"{{arquivo}}\",\n            \"tipoDocumento\": \"REQUERIMENTO_MERCADO_LIVRE_GAS\"\n        }\n    ],\n    \"cnpj\": \"21.272.190/0001-76\",\n    \"email\": \"danielvlr@gmail.com\",\n    \"endereco\": \"Rua gomes barreto n: 20\",\n    \"nomeEmpresa\": \"Empresa teste 01\",\n    \"prepostoEmpresa\": \"Preposto empresa\",\n    \"telefone\": \"859997129572\",\n    \"tipoSolicitacao\": \"AUTOPRODUTOR\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/justificativa",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"justificativa"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"descricao\": \"justificativa01\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/justificativa",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"justificativa"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "solicitacao/findAll",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/solicitacao/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"solicitacao",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "solicitacao/findById",
 							"request": {
@@ -146,7 +244,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "6275",
+											"value": "1",
 											"description": "(Required) "
 										}
 									]
@@ -165,58 +263,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/solicitacao?nomeEmpresa=string&cnpj=string&endereco=string&telefone=string&tipoSolicitacao=string&email=string&prepostoEmpresa=string&page=0&size=10&sortBy=id&sortOrder=ASC",
+									"raw": "{{baseUrl}}/solicitacao/dashboard",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"solicitacao"
-									],
-									"query": [
-										{
-											"key": "nomeEmpresa",
-											"value": "string"
-										},
-										{
-											"key": "cnpj",
-											"value": "string"
-										},
-										{
-											"key": "endereco",
-											"value": "string"
-										},
-										{
-											"key": "telefone",
-											"value": "string"
-										},
-										{
-											"key": "tipoSolicitacao",
-											"value": "string"
-										},
-										{
-											"key": "email",
-											"value": "string"
-										},
-										{
-											"key": "prepostoEmpresa",
-											"value": "string"
-										},
-										{
-											"key": "page",
-											"value": "0"
-										},
-										{
-											"key": "size",
-											"value": "10"
-										},
-										{
-											"key": "sortBy",
-											"value": "id"
-										},
-										{
-											"key": "sortOrder",
-											"value": "ASC"
-										}
+										"solicitacao",
+										"dashboard"
 									]
 								}
 							},
@@ -238,7 +291,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"id\": 1,\n  \"valido\": true\n}",
+									"raw": "{\n  \"id\": 3,\n  \"aprovado\": true\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -260,7 +313,7 @@
 							"response": []
 						},
 						{
-							"name": "analista finaliza solicitacao",
+							"name": "analista nao aturiza solicitacao",
 							"request": {
 								"method": "PATCH",
 								"header": [
@@ -275,7 +328,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"justificativa\": \"ta tudo errado\"\n}",
+									"raw": "{\n    \"id\" : 1\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -284,14 +337,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/solicitacao/analista/finaliza/1",
+									"raw": "{{baseUrl}}/solicitacao/analista/nao-autoriza/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"solicitacao",
 										"analista",
-										"finaliza",
+										"nao-autoriza",
 										"1"
 									]
 								}
@@ -299,7 +352,7 @@
 							"response": []
 						},
 						{
-							"name": "conselho diretor finaliza solicitacao",
+							"name": "conselho diretor nao autoriza solicitacao",
 							"request": {
 								"method": "PATCH",
 								"header": [
@@ -314,7 +367,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"justificativa\": \"ta tudo errado\"\n}",
+									"raw": "{\n  \"justificativa\": \"error total\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -323,13 +376,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/solicitacao/analista/finaliza/1",
+									"raw": "{{baseUrl}}/solicitacao/conselho-diretor/finaliza/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"solicitacao",
-										"analista",
+										"conselho-diretor",
 										"finaliza",
 										"1"
 									]

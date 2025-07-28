@@ -23,8 +23,11 @@ public class Arquivo extends BaseEntity{
 
     @Column(length = 4000)
     private String url;
-    private Boolean valido;
-    private String justificativa;
+
+    private Boolean aprovado;
+
+    @ManyToOne
+    private Justificativa justificativa;
 
     @ManyToOne
     private Solicitacao solicitacao;

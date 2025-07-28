@@ -127,4 +127,22 @@ public class EmailSpgcService {
         String content = templateEngine.process("email-template", context);
         emailService.sendEmail(to, from, subject, content);
     }
+
+    public void enviaEmailConselhoDiretor(Solicitacao solicitacao) {
+        var to = emailProperties.getFrom();
+        var from = emailProperties.getFrom();
+        String subject = "Nova solicitação recebida";
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("numeroSolicitacao", solicitacao.getId());
+        model.put("token", solicitacao.getToken());
+        model.put("urlCentralServico", emailProperties.getUrl());
+
+        Context context = new Context();
+        context.setVariable("data", model);
+        context.setVariable("fragment", "fragments/solicitacao-conselho-diretor");
+        String content = templateEngine.process("email-template", context);
+        emailService.sendEmail(to, from, subject, content);
+    }
+
 }

@@ -18,7 +18,7 @@ import static br.gov.ce.arce.spgc.model.BaseResponse.okSuccess;
 @RestController
 @RequestMapping("solicitacao")
 @AllArgsConstructor
-public class Solicitacao extends BaseController {
+public class SolicitacaoController extends BaseController {
 
     private final SolicitacaoService service;
 
@@ -47,17 +47,17 @@ public class Solicitacao extends BaseController {
         return okSuccess(result);
     }
 
-    @PatchMapping("/analista/finaliza/{id}")
-    public BaseResponse<SolicitacaoResponse> analistaFinalizaSolicitacao(@PathVariable Long id,
-                                                                         @RequestBody @Valid AnalistaFinalizaSolicitacaoRequest payload) {
-        var result = this.service.analistaFinalizaSolicitacaoRequest(id, payload);
+    @PatchMapping("/analista/nao-autoriza/{id}")
+    public BaseResponse<SolicitacaoResponse> analistaNaoAutorizaSolicitacao(@PathVariable Long id,
+                                                                         @RequestBody @Valid JustificativaRequest payload) {
+        var result = this.service.analistaNaoAutorizaSolicitacao(id, payload);
         return okSuccess(result);
     }
 
-    @PatchMapping("/conselho-diretor/finaliza/{id}")
-    public BaseResponse<SolicitacaoResponse> conselhoDiretorFinalizaSolicitacao(@PathVariable Long id,
-                                                                                @RequestBody @Valid ConselhoDiretorFinalizaSolicitacaoRequest payload) {
-        var result = this.service.conselhorDiretorFinalizaSolicitacaoRequest(id, payload);
+    @PatchMapping("/conselho-diretor/nao-autoriza/{id}")
+    public BaseResponse<SolicitacaoResponse> conselhoDiretorNaoAutorizaSolicitacao(@PathVariable Long id,
+                                                                                @RequestBody @Valid JustificativaRequest payload) {
+        var result = this.service.conselhorDiretorNaoAutorizaSolicitacao(id, payload);
         return okSuccess(result);
     }
 
@@ -66,7 +66,4 @@ public class Solicitacao extends BaseController {
         var result = this.service.dashboard();
         return okSuccess(result);
     }
-
-
-
 }

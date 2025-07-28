@@ -8,8 +8,8 @@ public enum SolicitacaoStatus {
     EM_ANALISE("Em Análise"),
     EM_ANALISE_ASSESSORIA("Em Análise (Assessoria)"),
     DOCUMENTACAO_PENDENTE("Documentação Pendente"),
-    CONCLUIDO("Concluído"),
-    REJEITADO("Rejeitado");
+    AUTORIZADO("Autorizado"),
+    NAO_AUTORIZADO("Não Autorizado");
 
     private final String descricao;
 

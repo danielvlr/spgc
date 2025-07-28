@@ -6,6 +6,7 @@ import br.gov.ce.arce.spgc.model.BasePageResponse;
 import br.gov.ce.arce.spgc.model.dto.*;
 import br.gov.ce.arce.spgc.model.entity.Solicitacao;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
+import br.gov.ce.arce.spgc.model.mapper.JustificativaMapper;
 import br.gov.ce.arce.spgc.model.mapper.SolicitacaoMapper;
 import br.gov.ce.arce.spgc.repository.SolicitacaoRepository;
 import br.gov.ce.arce.spgc.strategy.SolicitacaoStrategy;
@@ -28,6 +29,8 @@ public class SolicitacaoService {
     private final SolicitacaoMapper mapper;
     private final EmailSpgcService emailSpgcService;
     private final Map<String, SolicitacaoStrategy> strategyMap;
+    private final JustificativaMapper justificativaMapper;
+
 
     public SolicitacaoResponse criarSolicitacao(CreateSolicitacaoRequest request) {
         SolicitacaoStrategy strategy = getStrategy(request.tipoSolicitacao());
@@ -45,8 +48,8 @@ public class SolicitacaoService {
         solicitacao = repository.save(solicitacao);
 
         // Envia arquivo para o minio
-        solicitacao.getArquivos().stream().forEach(arquivo->{
-            var url = minioService.saveFileBase64(arquivo.getConteudoBase64(), "teste", arquivo.getTipoDocumento().name(),arquivo.getId());
+        solicitacao.getArquivos().stream().forEach(arquivo -> {
+            var url = minioService.saveFileBase64(arquivo.getConteudoBase64(), "teste", arquivo.getTipoDocumento().name(), arquivo.getId());
             arquivo.setUrl(url);
         });
 
@@ -86,9 +89,10 @@ public class SolicitacaoService {
         var result = repository.findByCnpj(cnpj);
         return mapper.toSolicitacaoResponseList(result);
     }
+
     public boolean validaDocumentos(Solicitacao solicitacao, Predicate<Boolean> predicate) {
         return solicitacao.getArquivos().stream()
-                .allMatch(a -> predicate.test(a.getValido()));
+                .allMatch(a -> predicate.test(a.getAprovado()));
     }
 
     public boolean validaTodosDocumentosAvaliados(Solicitacao solicitacao) {
@@ -99,72 +103,58 @@ public class SolicitacaoService {
         return validaDocumentos(solicitacao, Boolean.TRUE::equals);
     }
 
-    public SolicitacaoResponse analistaFinalizaSolicitacaoRequest(Long id, AnalistaFinalizaSolicitacaoRequest payload) {
-        var solicitacao = repository.getReferenceById(id);
+    public void todosDocumentosAnalisadosSolicitacao(Solicitacao solicitacao) {
         var strategy = getStrategy(solicitacao.getTipoSolicitacao().name());
 
-        if (!payload.valido() && payload.justificativa() != null && !payload.justificativa().isBlank()){
-            throw BusinessException.createBadRequestBusinessException("Necessario informar a justificativa para rejeição.");
+        if (validaTodosDocumentosAvaliados(solicitacao)) {
+            if (validaTodosDocumentosConfirmados(solicitacao)) {
+                solicitacao.setStatus(strategy.analistaFinalizaSolicitacao());
+            } else {
+                solicitacao.setStatus(SolicitacaoStatus.DOCUMENTACAO_PENDENTE);
+            }
         }
 
-        if (!validaTodosDocumentosAvaliados(solicitacao)) {
-            throw BusinessException.createBadRequestBusinessException("Solicitação ainda tem arquivos pendentes de análise.");
+        var statusPendentes = List.of(SolicitacaoStatus.AUTORIZADO, SolicitacaoStatus.EM_ANALISE_ASSESSORIA);
+        if (statusPendentes.contains(solicitacao.getStatus())) {
+            repository.save(solicitacao);
+            if (solicitacao.getStatus() == SolicitacaoStatus.AUTORIZADO) {
+                emailSpgcService.enviaEmailSolicitacaoConcluida(solicitacao);
+            }
+            if (solicitacao.getStatus() == SolicitacaoStatus.EM_ANALISE_ASSESSORIA) {
+                emailSpgcService.enviaEmailConselhoDiretor(solicitacao);
+            }
         }
+    }
 
-        solicitacao.setJustificativa(payload.justificativa());
-
-        if(payload.valido()) {
-            solicitacao.setStatus(strategy.analistaFinalizaSolicitacao());
-        }else {
-            solicitacao.setStatus(SolicitacaoStatus.DOCUMENTACAO_PENDENTE);
-            emailSpgcService.enviaEmailPendenciaDocumentoSolicitante(solicitacao);
-        }
-
-        if (solicitacao.getStatus() == SolicitacaoStatus.CONCLUIDO) {
-            emailSpgcService.enviaEmailSolicitacaoConcluida(solicitacao);
-        }
-
+    public SolicitacaoResponse analistaNaoAutorizaSolicitacao(Long id, JustificativaRequest payload) {
+        var solicitacao = repository.getReferenceById(id);
+        var justificativa = justificativaMapper.toEntity(payload);
+        solicitacao.setJustificativa(justificativa);
+        solicitacao.setStatus(SolicitacaoStatus.NAO_AUTORIZADO);
+        emailSpgcService.enviaEmailSolicitacaoRejeitada(solicitacao);
         return mapper.toSolicitacaoResponse(repository.save(solicitacao));
     }
 
-    public SolicitacaoResponse conselhorDiretorFinalizaSolicitacaoRequest(Long id, ConselhoDiretorFinalizaSolicitacaoRequest payload) {
+    public SolicitacaoResponse conselhorDiretorNaoAutorizaSolicitacao(Long id, JustificativaRequest payload) {
         var solicitacao = repository.getReferenceById(id);
-
-        if (!payload.valido() && payload.justificativa() != null && !payload.justificativa().isBlank()){
-            throw BusinessException.createBadRequestBusinessException("Necessario informar a justificativa para rejeição.");
-        }
-
-        if (solicitacao.getNup() == null || solicitacao.getNup().isBlank()) {
-            throw BusinessException.createBadRequestBusinessException("Solicitação não possui NUP preenchido.");
-        }
-
-        if (solicitacao.getStatus() != SolicitacaoStatus.EM_ANALISE_ASSESSORIA) {
-            throw BusinessException.createBadRequestBusinessException("Solicitação não está no status 'EM_ANALISE_ASSESSORIA'.");
-        }
-
-        solicitacao.setJustificativa(payload.justificativa());
-
-        if(payload.valido()){
-            solicitacao.setStatus(SolicitacaoStatus.CONCLUIDO);
-            emailSpgcService.enviaEmailSolicitacaoConcluida(solicitacao);
-        }else {
-            solicitacao.setStatus(SolicitacaoStatus.REJEITADO);
-            emailSpgcService.enviaEmailSolicitacaoRejeitada(solicitacao);
-        }
+        var justificativa = justificativaMapper.toEntity(payload);
+        solicitacao.setJustificativa(justificativa);
+        solicitacao.setStatus(SolicitacaoStatus.NAO_AUTORIZADO);
+        emailSpgcService.enviaEmailSolicitacaoRejeitada(solicitacao);
         return mapper.toSolicitacaoResponse(repository.save(solicitacao));
     }
 
     void validaCriacao(Solicitacao solicitacao) {
         var cnpj = solicitacao.getCnpj();
         var tipoSolicitacao = solicitacao.getTipoSolicitacao();
-        var solicitacaoExistente = repository.findByCnpjAndTipoSolicitacaoAndStatusNotIn(cnpj, tipoSolicitacao, SolicitacaoStatus.emAberto());
+        var solicitacaoExistente = repository.findByCnpjAndTipoSolicitacaoAndStatusIn(cnpj, tipoSolicitacao, SolicitacaoStatus.emAberto());
 
         if (solicitacaoExistente.isPresent()) {
-            throw BusinessException.createConflictBusinessException("Já existe uma solicitação ativa para este CNPJ e tipo de solicitação.");
+            throw BusinessException.createConflictBusinessException("Já solicitação ativa para este CNPJ e tipo de solicitação.");
         }
     }
 
     public List<DashboardResponse> dashboard() {
-        return repository.dashboard();
+        return repository.dashboard(SolicitacaoStatus.emAberto());
     }
 }

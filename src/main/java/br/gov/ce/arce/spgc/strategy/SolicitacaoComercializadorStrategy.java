@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class SolicitacaoComercializadorStrategy implements SolicitacaoStrategy {
 
     public SolicitacaoStatus analistaFinalizaSolicitacao(){
-        return SolicitacaoStatus.CONCLUIDO;
+        return SolicitacaoStatus.EM_ANALISE_ASSESSORIA;
     }
 
     public void valida(Solicitacao solicitacao) {

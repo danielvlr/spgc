@@ -3,8 +3,10 @@ package br.gov.ce.arce.spgc.service;
 import br.gov.ce.arce.spgc.client.minio.MinioService;
 import br.gov.ce.arce.spgc.exception.BusinessException;
 import br.gov.ce.arce.spgc.model.dto.*;
+import br.gov.ce.arce.spgc.model.entity.Solicitacao;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.ArquivoMapper;
+import br.gov.ce.arce.spgc.model.mapper.JustificativaMapper;
 import br.gov.ce.arce.spgc.repository.ArquivoRepository;
 import br.gov.ce.arce.spgc.repository.SolicitacaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,8 @@ public class ArquivoService {
     private final ArquivoMapper mapper;
     private final EmailSpgcService emailSpgcService;
     private final MinioService minioService;
-    private final SolicitacaoRepository solicitacaoRepository;
+    private final SolicitacaoService solicitacaoService;
+    private final JustificativaMapper justificativaMapper;
 
 
     public ArquivoResponse findById(Long id) {
@@ -29,13 +32,27 @@ public class ArquivoService {
     @Transactional
     public ArquivoResponse analistaValidaArquivo(ValidaArquivoRequest request) {
         var arquivo = repository.getReferenceById(request.id());
+        var solicitacao = arquivo.getSolicitacao();
+        var justificativa = justificativaMapper.toEntity(request.justificativa());
+
+        // Valida arquivo e solicitacao
+        valida(solicitacao);
 
         // Salva dados arquivo
-        arquivo.setValido(request.valido());
-        arquivo.setJustificativa(request.justificativa());
+        arquivo.setAprovado(request.aprovado());
+        arquivo.setJustificativa(justificativa);
         repository.save(arquivo);
 
+        // Verifica se deve atualizar status solicitacao
+        solicitacaoService.todosDocumentosAnalisadosSolicitacao(solicitacao);
+
         return mapper.toArquivoResponse(arquivo);
+    }
+
+    private void valida(Solicitacao solicitacao) {
+        if(!SolicitacaoStatus.emAberto().contains(solicitacao.getStatus())){
+            throw BusinessException.createBadRequestBusinessException("Não é possivel alterar solicitações em status final.");
+        }
     }
 
     @Transactional
@@ -44,17 +61,17 @@ public class ArquivoService {
         var solicitacao = arquivo.getSolicitacao();
 
         // Verifica se o arquivo ja e valido
-        if(arquivo.getValido() != null && arquivo.getValido()){
+        if(arquivo.getAprovado() != null && arquivo.getAprovado()){
             throw BusinessException.createConflictBusinessException("Arquivo ja esta com status valido.");
         }
 
         // atualiza dados campo de controle para null depois que o usuario subir novo arquivo
         arquivo.setJustificativa(null);
-        arquivo.setValido(null);
+        arquivo.setAprovado(null);
 
         // verifica se todos os arquivos pendentes de envio foram atualizado
         boolean todosAtualizados = solicitacao.getArquivos().stream()
-                .allMatch(a -> (a.getValido() == null || a.getValido()) && solicitacao.getStatus() == SolicitacaoStatus.DOCUMENTACAO_PENDENTE);
+                .allMatch(a -> (a.getAprovado() == null || a.getAprovado()) && solicitacao.getStatus() == SolicitacaoStatus.DOCUMENTACAO_PENDENTE);
 
         if(todosAtualizados){
             solicitacao.setStatus(SolicitacaoStatus.EM_ANALISE);

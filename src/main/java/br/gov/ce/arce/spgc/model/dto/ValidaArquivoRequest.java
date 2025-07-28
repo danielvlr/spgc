@@ -6,8 +6,8 @@ public record ValidaArquivoRequest(
         @NotBlank(message = "Valor 'arquivoId' é obrigatório")
         Long id,
 
-        @NotBlank(message = "Valor 'valido' é obrigatório")
-        Boolean valido,
+        @NotBlank(message = "Valor 'aprovado' é obrigatório")
+        Boolean aprovado,
 
-        String justificativa
+        JustificativaRequest justificativa
 ) {}

@@ -4,7 +4,7 @@ public record ArquivoResponse(
         Long id,
         String tipoDocumento,
         String url,
-        Boolean valido,
-        String justificativa
+        Boolean aprovado,
+        JustificativaResponse justificativa
 ) {}
 

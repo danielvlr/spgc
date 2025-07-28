@@ -55,7 +55,8 @@ public class Solicitacao extends BaseEntity{
     @NotNull(message = "Necessario informar o status da solicitação.")
     private SolicitacaoStatus status;
 
-    private String justificativa;
+    @ManyToOne
+    private Justificativa justificativa;
 
     @OneToMany(mappedBy = "solicitacao", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC")
