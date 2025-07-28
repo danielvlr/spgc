@@ -26,7 +26,6 @@ public class ArquivoService {
     private final SolicitacaoService solicitacaoService;
     private final JustificativaMapper justificativaMapper;
 
-
     public ArquivoResponse findById(Long id) {
         return mapper.toArquivoResponse(repository.getReferenceById(id));
     }
