@@ -8,12 +8,9 @@ import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.ArquivoMapper;
 import br.gov.ce.arce.spgc.model.mapper.JustificativaMapper;
 import br.gov.ce.arce.spgc.repository.ArquivoRepository;
-import br.gov.ce.arce.spgc.repository.SolicitacaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
