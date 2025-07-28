@@ -4,10 +4,12 @@ import br.gov.ce.arce.spgc.client.minio.MinioService;
 import br.gov.ce.arce.spgc.exception.BusinessException;
 import br.gov.ce.arce.spgc.model.BasePageResponse;
 import br.gov.ce.arce.spgc.model.dto.*;
+import br.gov.ce.arce.spgc.model.entity.Justificativa;
 import br.gov.ce.arce.spgc.model.entity.Solicitacao;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.JustificativaMapper;
 import br.gov.ce.arce.spgc.model.mapper.SolicitacaoMapper;
+import br.gov.ce.arce.spgc.repository.JustificativaRepository;
 import br.gov.ce.arce.spgc.repository.SolicitacaoRepository;
 import br.gov.ce.arce.spgc.strategy.SolicitacaoStrategy;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,7 +33,7 @@ public class SolicitacaoService {
     private final EmailSpgcService emailSpgcService;
     private final Map<String, SolicitacaoStrategy> strategyMap;
     private final JustificativaMapper justificativaMapper;
-
+    private final JustificativaRepository justificativaRepository;
 
     public SolicitacaoResponse criarSolicitacao(CreateSolicitacaoRequest request) {
         SolicitacaoStrategy strategy = getStrategy(request.tipoSolicitacao());
@@ -88,6 +91,11 @@ public class SolicitacaoService {
         cnpj = cnpj.replaceAll("\\D", "");
         var result = repository.findByCnpj(cnpj);
         return mapper.toSolicitacaoResponseList(result);
+    }
+
+    public boolean validaTodosDocumentosAvaliadosOuPendenteAnalista(Solicitacao solicitacao) {
+        return solicitacao.getArquivos().stream()
+                .allMatch(a -> Objects.isNull(a) || a.getAprovado() );
     }
 
     public boolean validaDocumentos(Solicitacao solicitacao, Predicate<Boolean> predicate) {
@@ -148,7 +156,6 @@ public class SolicitacaoService {
         var cnpj = solicitacao.getCnpj();
         var tipoSolicitacao = solicitacao.getTipoSolicitacao();
         var solicitacaoExistente = repository.findByCnpjAndTipoSolicitacaoAndStatusIn(cnpj, tipoSolicitacao, SolicitacaoStatus.emAberto());
-
         if (solicitacaoExistente.isPresent()) {
             throw BusinessException.createConflictBusinessException("Já solicitação ativa para este CNPJ e tipo de solicitação.");
         }
@@ -156,5 +163,23 @@ public class SolicitacaoService {
 
     public List<DashboardResponse> dashboard() {
         return repository.dashboard(SolicitacaoStatus.emAberto());
+    }
+
+    public void atualizaSolicitacoesDocumentacaoPendente() {
+        LocalDateTime dataLimite = LocalDateTime.now().minusDays(30);
+        var solicitacoes = repository.findByStatusAndLastModifiedDate(SolicitacaoStatus.DOCUMENTACAO_PENDENTE, dataLimite);
+        Justificativa justificativa = justificativaRepository.findById(0L)
+                .orElseGet(() -> {
+                    Justificativa nova = new Justificativa();
+                    nova.setId(0L);
+                    nova.setDescricao("30 dias no status 'Documentação Pendente'");
+                    return justificativaRepository.save(nova);
+                });
+
+        solicitacoes.forEach(solicitacao -> {
+            solicitacao.setJustificativa(justificativa);
+            solicitacao.setStatus(SolicitacaoStatus.NAO_AUTORIZADO);
+        });
+        repository.saveAll(solicitacoes);
     }
 }

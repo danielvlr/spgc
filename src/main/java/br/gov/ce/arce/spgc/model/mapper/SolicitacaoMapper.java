@@ -8,6 +8,7 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.Objects;
 
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface SolicitacaoMapper {
@@ -33,7 +34,7 @@ public interface SolicitacaoMapper {
 
     @Named("tipoSolicitacao")
     static TipoSolicitacao tipoSolicitacao(String tipoSolicitacao) {
-        return TipoSolicitacao.valueOf(tipoSolicitacao);
+        return Objects.isNull(tipoSolicitacao) ? null : TipoSolicitacao.valueOf(tipoSolicitacao);
     }
 
     @Named("statusToString")
