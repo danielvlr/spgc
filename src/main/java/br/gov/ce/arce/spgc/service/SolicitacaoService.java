@@ -4,12 +4,14 @@ import br.gov.ce.arce.spgc.client.minio.MinioService;
 import br.gov.ce.arce.spgc.exception.BusinessException;
 import br.gov.ce.arce.spgc.model.BasePageResponse;
 import br.gov.ce.arce.spgc.model.dto.*;
+import br.gov.ce.arce.spgc.model.dto.suite.CriarProcessoExternoRequest;
 import br.gov.ce.arce.spgc.model.entity.Solicitacao;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.JustificativaMapper;
 import br.gov.ce.arce.spgc.model.mapper.SolicitacaoMapper;
 import br.gov.ce.arce.spgc.repository.SolicitacaoRepository;
 import br.gov.ce.arce.spgc.strategy.SolicitacaoStrategy;
+import br.gov.ce.arce.spgc.util.AppSuiteProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
@@ -30,10 +32,16 @@ public class SolicitacaoService {
     private final EmailSpgcService emailSpgcService;
     private final Map<String, SolicitacaoStrategy> strategyMap;
     private final JustificativaMapper justificativaMapper;
+    private final AppSuiteProperties appSuiteProperties;
+    private final SuiteService suiteService;
 
 
     public SolicitacaoResponse criarSolicitacao(CreateSolicitacaoRequest request) {
         SolicitacaoStrategy strategy = getStrategy(request.tipoSolicitacao());
+
+        final Integer subjectId = appSuiteProperties.getPapelZeroApi().getAssuntoIdGasCanalizado();
+        final Integer originId = appSuiteProperties.getPapelZeroApi().getLotacaoIdOrigem();
+        final Integer capacityId = appSuiteProperties.getPapelZeroApi().getLotacaoIdDestino();
 
         // converte o request em entity
         var solicitacao = mapper.toEntity(request);
@@ -52,6 +60,15 @@ public class SolicitacaoService {
             var url = minioService.saveFileBase64(arquivo.getConteudoBase64(), "teste", arquivo.getTipoDocumento().name(), arquivo.getId());
             arquivo.setUrl(url);
         });
+
+        var criarNupRequest = CriarProcessoExternoRequest.builder()
+                .subjectId(subjectId)
+                .originId(originId)
+                .capacityId(capacityId)
+                .systemName("Sistema de Plataforma Gás Canalizado")
+                .systemAbbreviationName("SPGC")
+                .files(null)
+                .build();
 
         // Cria token unico para solicitacao
 
