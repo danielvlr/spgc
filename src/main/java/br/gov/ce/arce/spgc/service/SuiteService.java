@@ -16,7 +16,7 @@ public class SuiteService {
 
     private final SuiteClient suiteClient;
 
-    public CriarProcessoExternoResponse criarProcessoSistemaExterno(
+    public CriarProcessoExternoResponse criarProcessoExterno(
             @NotNull @Valid CriarProcessoExternoRequest request) {
         try {
             var response = suiteClient.criarProcessoExterno(request);

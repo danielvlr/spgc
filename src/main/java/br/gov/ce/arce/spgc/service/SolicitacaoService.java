@@ -4,9 +4,13 @@ import br.gov.ce.arce.spgc.client.minio.MinioService;
 import br.gov.ce.arce.spgc.exception.BusinessException;
 import br.gov.ce.arce.spgc.model.BasePageResponse;
 import br.gov.ce.arce.spgc.model.dto.*;
+import br.gov.ce.arce.spgc.model.dto.suite.ArquivoExternoTO;
 import br.gov.ce.arce.spgc.model.dto.suite.CriarProcessoExternoRequest;
+import br.gov.ce.arce.spgc.model.dto.suite.CriarProcessoExternoResponse;
 import br.gov.ce.arce.spgc.model.entity.Solicitacao;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
+import br.gov.ce.arce.spgc.model.enumeration.TipoArquivoEnum;
+import br.gov.ce.arce.spgc.model.enumeration.TipoDocumentoNupEnum;
 import br.gov.ce.arce.spgc.model.mapper.JustificativaMapper;
 import br.gov.ce.arce.spgc.model.mapper.SolicitacaoMapper;
 import br.gov.ce.arce.spgc.repository.SolicitacaoRepository;
@@ -17,6 +21,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -43,6 +48,8 @@ public class SolicitacaoService {
         final Integer originId = appSuiteProperties.getPapelZeroApi().getLotacaoIdOrigem();
         final Integer capacityId = appSuiteProperties.getPapelZeroApi().getLotacaoIdDestino();
 
+        List<ArquivoExternoTO> arquivos = new ArrayList<>();
+
         // converte o request em entity
         var solicitacao = mapper.toEntity(request);
 
@@ -59,6 +66,7 @@ public class SolicitacaoService {
         solicitacao.getArquivos().stream().forEach(arquivo -> {
             var url = minioService.saveFileBase64(arquivo.getConteudoBase64(), "teste", arquivo.getTipoDocumento().name(), arquivo.getId());
             arquivo.setUrl(url);
+            arquivos.add(criarArquivoExterno(Math.toIntExact(arquivo.getId()),arquivo.getConteudoBase64(), TipoDocumentoNupEnum.ANEXO.getId()));
         });
 
         var criarNupRequest = CriarProcessoExternoRequest.builder()
@@ -67,8 +75,10 @@ public class SolicitacaoService {
                 .capacityId(capacityId)
                 .systemName("Sistema de Plataforma Gás Canalizado")
                 .systemAbbreviationName("SPGC")
-                .files(null)
+                .files(arquivos)
                 .build();
+
+        final CriarProcessoExternoResponse criarNupResponse = suiteService.criarProcessoExterno(criarNupRequest);
 
         // Cria token unico para solicitacao
 
@@ -174,4 +184,14 @@ public class SolicitacaoService {
     public List<DashboardResponse> dashboard() {
         return repository.dashboard(SolicitacaoStatus.emAberto());
     }
+
+    private ArquivoExternoTO criarArquivoExterno(Integer id, String b64file, Integer tipo) {
+        return ArquivoExternoTO.builder()
+                .documentTypeId(tipo)
+                .file(b64file)
+                .fileName(id)
+                .fileType(TipoArquivoEnum.BASE64.getDesc())
+                .build();
+    }
+
 }
