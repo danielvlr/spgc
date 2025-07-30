@@ -1,4 +1,4 @@
-package br.gov.ce.arce.spgc.model.dto.suite;
+package br.gov.ce.arce.spgc.client.suite;
 
 import lombok.Data;
 

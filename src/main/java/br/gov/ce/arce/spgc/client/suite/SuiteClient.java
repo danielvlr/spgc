@@ -1,6 +1,5 @@
 package br.gov.ce.arce.spgc.client.suite;
 
-import br.gov.ce.arce.spgc.model.dto.suite.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

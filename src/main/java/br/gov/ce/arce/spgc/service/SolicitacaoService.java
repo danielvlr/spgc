@@ -4,9 +4,9 @@ import br.gov.ce.arce.spgc.client.minio.MinioService;
 import br.gov.ce.arce.spgc.exception.BusinessException;
 import br.gov.ce.arce.spgc.model.BasePageResponse;
 import br.gov.ce.arce.spgc.model.dto.*;
-import br.gov.ce.arce.spgc.model.dto.suite.ArquivoExternoTO;
-import br.gov.ce.arce.spgc.model.dto.suite.CriarProcessoExternoRequest;
-import br.gov.ce.arce.spgc.model.dto.suite.CriarProcessoExternoResponse;
+import br.gov.ce.arce.spgc.client.suite.ArquivoExternoTO;
+import br.gov.ce.arce.spgc.client.suite.CriarProcessoExternoRequest;
+import br.gov.ce.arce.spgc.client.suite.CriarProcessoExternoResponse;
 import br.gov.ce.arce.spgc.model.entity.Solicitacao;
 import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.enumeration.TipoArquivoEnum;
@@ -44,9 +44,9 @@ public class SolicitacaoService {
     public SolicitacaoResponse criarSolicitacao(CreateSolicitacaoRequest request) {
         SolicitacaoStrategy strategy = getStrategy(request.tipoSolicitacao());
 
-        final Integer subjectId = appSuiteProperties.getPapelZeroApi().getAssuntoIdGasCanalizado();
-        final Integer originId = appSuiteProperties.getPapelZeroApi().getLotacaoIdOrigem();
-        final Integer capacityId = appSuiteProperties.getPapelZeroApi().getLotacaoIdDestino();
+        final Integer subjectId = appSuiteProperties.getAssuntoIdGasCanalizado();
+        final Integer originId = appSuiteProperties.getLotacaoIdOrigem();
+        final Integer capacityId = appSuiteProperties.getLotacaoIdDestino();
 
         List<ArquivoExternoTO> arquivos = new ArrayList<>();
 

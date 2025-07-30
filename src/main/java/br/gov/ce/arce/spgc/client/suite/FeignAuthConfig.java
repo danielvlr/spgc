@@ -19,8 +19,7 @@ public class FeignAuthConfig {
         return new RequestInterceptor() {
             @Override
             public void apply(RequestTemplate template) {
-                template.header(HttpHeaders.AUTHORIZATION, "Token " + appSuiteProperties
-                        .getPapelZeroApi().getAccessToken());
+                template.header(HttpHeaders.AUTHORIZATION, "Token " + appSuiteProperties.getAccessToken());
                 template.header(HttpHeaders.ACCEPT, "application/json;version=1.0");
                 template.header(HttpHeaders.CONTENT_TYPE, "application/json;version=1.0");
             }

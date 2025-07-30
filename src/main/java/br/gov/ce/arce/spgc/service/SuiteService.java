@@ -2,8 +2,8 @@ package br.gov.ce.arce.spgc.service;
 
 import br.gov.ce.arce.spgc.client.suite.SuiteClient;
 import br.gov.ce.arce.spgc.exception.BusinessException;
-import br.gov.ce.arce.spgc.model.dto.suite.CriarProcessoExternoRequest;
-import br.gov.ce.arce.spgc.model.dto.suite.CriarProcessoExternoResponse;
+import br.gov.ce.arce.spgc.client.suite.CriarProcessoExternoRequest;
+import br.gov.ce.arce.spgc.client.suite.CriarProcessoExternoResponse;
 import feign.FeignException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
