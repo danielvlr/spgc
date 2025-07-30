@@ -31,4 +31,10 @@ public class AppSuiteProperties {
     @NotNull
     private Integer lotacaoIdDestino; // Assessoria de Gabinete e Controle Interno da ARCE (CDR/AGC)
 
+    @NotNull
+    private String systemName;
+
+    @NotNull
+    private String systemAbbreviationName;
+
 }

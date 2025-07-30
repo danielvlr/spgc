@@ -47,6 +47,8 @@ public class SolicitacaoService {
         final Integer subjectId = appSuiteProperties.getAssuntoIdGasCanalizado();
         final Integer originId = appSuiteProperties.getLotacaoIdOrigem();
         final Integer capacityId = appSuiteProperties.getLotacaoIdDestino();
+        final String systemName = appSuiteProperties.getSystemName();
+        final String systemAbbreviationName = appSuiteProperties.getSystemAbbreviationName();
 
         List<ArquivoExternoTO> arquivos = new ArrayList<>();
 
@@ -73,8 +75,8 @@ public class SolicitacaoService {
                 .subjectId(subjectId)
                 .originId(originId)
                 .capacityId(capacityId)
-                .systemName("Sistema de Plataforma Gás Canalizado")
-                .systemAbbreviationName("SPGC")
+                .systemName(systemName)
+                .systemAbbreviationName(systemAbbreviationName)
                 .files(arquivos)
                 .build();
 
