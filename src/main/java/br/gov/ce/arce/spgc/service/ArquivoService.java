@@ -8,7 +8,6 @@ import br.gov.ce.arce.spgc.model.enumeration.SolicitacaoStatus;
 import br.gov.ce.arce.spgc.model.mapper.ArquivoMapper;
 import br.gov.ce.arce.spgc.model.mapper.JustificativaMapper;
 import br.gov.ce.arce.spgc.repository.ArquivoRepository;
-import br.gov.ce.arce.spgc.repository.SolicitacaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ public class ArquivoService {
     private final MinioService minioService;
     private final SolicitacaoService solicitacaoService;
     private final JustificativaMapper justificativaMapper;
-
 
     public ArquivoResponse findById(Long id) {
         return mapper.toArquivoResponse(repository.getReferenceById(id));
@@ -41,6 +39,7 @@ public class ArquivoService {
         // Salva dados arquivo
         arquivo.setAprovado(request.aprovado());
         arquivo.setJustificativa(justificativa);
+
         repository.save(arquivo);
 
         // Verifica se deve atualizar status solicitacao
@@ -50,8 +49,25 @@ public class ArquivoService {
     }
 
     private void valida(Solicitacao solicitacao) {
-        if(!SolicitacaoStatus.emAberto().contains(solicitacao.getStatus())){
-            throw BusinessException.createBadRequestBusinessException("Não é possivel alterar solicitações em status final.");
+        var status = solicitacao.getStatus();
+
+        if (!SolicitacaoStatus.emAberto().contains(status)) {
+            throw BusinessException.createBadRequestBusinessException(
+                    "Não é possível alterar solicitações em status final.");
+        }
+
+        if (status == SolicitacaoStatus.AGUARDANDO_ANALISE) {
+            solicitacao.setStatus(SolicitacaoStatus.EM_ANALISE);
+            emailSpgcService.enviaEmailEmAnaliseSolicitante(solicitacao);
+            return;
+        }
+
+        if (status == SolicitacaoStatus.DOCUMENTACAO_PENDENTE
+                && solicitacaoService.validaTodosDocumentosAvaliadosOuPendenteAnalista(solicitacao)) {
+            solicitacao.setStatus(SolicitacaoStatus.EM_ANALISE);
+            emailSpgcService.enviaEmailEmAnaliseSolicitante(solicitacao);
+        } else{
+            throw BusinessException.createBadRequestBusinessException("Não é possivel atualizar solicitação pois o solicitante ainda tem documentos pendentes.");
         }
     }
 

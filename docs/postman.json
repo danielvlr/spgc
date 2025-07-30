@@ -203,19 +203,67 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/solicitacao/:id",
+									"raw": "{{baseUrl}}/solicitacao?email=danielvlr@gmail.com",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"solicitacao",
-										":id"
+										"solicitacao"
 									],
-									"variable": [
+									"query": [
 										{
-											"key": "id",
-											"value": "1",
-											"description": "(Required) "
+											"key": "nomeEmpresa",
+											"value": "string",
+											"disabled": true
+										},
+										{
+											"key": "cnpj",
+											"value": "string",
+											"disabled": true
+										},
+										{
+											"key": "endereco",
+											"value": "string",
+											"disabled": true
+										},
+										{
+											"key": "telefone",
+											"value": "string",
+											"disabled": true
+										},
+										{
+											"key": "tipoSolicitacao",
+											"value": "string",
+											"disabled": true
+										},
+										{
+											"key": "email",
+											"value": "danielvlr@gmail.com"
+										},
+										{
+											"key": "prepostoEmpresa",
+											"value": "string",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "sortBy",
+											"value": "id",
+											"disabled": true
+										},
+										{
+											"key": "sortOrder",
+											"value": "ASC",
+											"disabled": true
 										}
 									]
 								}
@@ -291,7 +339,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"id\": 3,\n  \"aprovado\": true\n}",
+									"raw": "{\n  \"id\": 3,\n  \"aprovado\": false,\n  \"justificativa\": { \"id\" : 1 }\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
