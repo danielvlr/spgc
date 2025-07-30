@@ -10,7 +10,7 @@ import org.springframework.http.HttpHeaders;
 
 @Configuration
 @AllArgsConstructor
-public class FeignAuthConfig {
+public class FeignSuiteConfig {
 
     private final AppSuiteProperties appSuiteProperties;
 

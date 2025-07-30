@@ -10,8 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@FeignClient(contextId = "suiteClient", name = "suite-client", url = "${app.spgc.papel-zero-api.base-url}",
-        configuration = FeignAuthConfig.class)
+@FeignClient(contextId = "suiteClient", name = "suite-client", url = "${app.spgc.papel-zero-api.base-url}", configuration = FeignSuiteConfig.class)
 public interface SuiteClient {
 
     @GetMapping(path = "/process/nup/{nup}")
