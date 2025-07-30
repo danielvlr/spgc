@@ -1,21 +1,38 @@
 package br.gov.ce.arce.spgc.client.suite;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-@Service
-@FeignClient(contextId = "suiteClient", name = "suite-client", url = "${suite.api.url}", configuration = SuiteClientConfiguration.class)
+
+@FeignClient(contextId = "suiteClient", name = "suite-client", url = "${app.spgc.papel-zero-api.base-url}",
+        configuration = FeignAuthConfig.class)
 public interface SuiteClient {
 
-    @GetMapping(path = "/process/doe/sgdo/{nup}")
-    ResponseEntity<SuiteResponse> getInfoSuiteByNup(@PathVariable("nup") String nup);
+    @GetMapping(path = "/process/nup/{nup}")
+    ResponseEntity<ProcessoSuiteTO> consultarProcessoNup(
+            @NotEmpty @Size(max = 20, message = "inválido")
+            @Pattern(regexp = "^[0-9]*$", message = "inválido")
+            @PathVariable("nup") String nup);
 
-    @PutMapping(path = "/autorizar/sgdo/{nup}")
-    ResponseEntity<Void> autorizarDocumentos(@PathVariable("nup") String nup, @RequestBody AutorizacaoDocumentos autorizacaoDocumentos);
+    @PostMapping(path = "/process/create/external-system")
+    ResponseEntity<CriarProcessoSistemaExternoResponse> criarProcessoSistemaExterno(
+            @NotNull @Valid @RequestBody CriarProcessoSistemaExternoRequest request);
 
+    @PostMapping(path = "/process/create/external")
+    ResponseEntity<CriarProcessoExternoResponse> criarProcessoExterno(
+            @NotNull @Valid @RequestBody CriarProcessoExternoRequest request);
+
+    @PatchMapping(path = "/process/{nup}/tramitar")
+    ResponseEntity<TramitarProcessoTO> tramitarProcesso(
+            @NotEmpty @Size(max = 20, message = "inválido")
+            @Pattern(regexp = "^[0-9]*$", message = "inválido")
+            @PathVariable("nup") String nup,
+            @NotNull @Valid @RequestBody TramitarProcessoTO request);
 }
+

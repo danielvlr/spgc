@@ -13,6 +13,11 @@ public class BusinessException extends RuntimeException {
         this.httpStatus = httpStatus;
     }
 
+    public BusinessException(String message) {
+        super(message);
+        this.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+
     public static BusinessException createBadRequestBusinessException(String message) {
         return new BusinessException(message, HttpStatus.BAD_REQUEST);
     }
@@ -27,6 +32,24 @@ public class BusinessException extends RuntimeException {
 
     public static BusinessException createUnauthorizedBusinessException(String message) {
         return new BusinessException(message, HttpStatus.UNAUTHORIZED);
+    }
+
+    public static BusinessException createWithStatusBusinessException(String message, String statusCode) {
+        try {
+            HttpStatus status;
+
+            // Tenta primeiro como código numérico
+            if (statusCode.matches("\\d+")) {
+                status = HttpStatus.valueOf(Integer.parseInt(statusCode));
+            } else {
+                status = HttpStatus.valueOf(statusCode.toUpperCase());
+            }
+
+            return new BusinessException(message, status);
+        } catch (Exception e) {
+            // fallback genérico se não for possível resolver o status
+            return new BusinessException(message + " (status desconhecido: " + statusCode + ")", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
